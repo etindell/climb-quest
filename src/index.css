@@ -14,20 +14,63 @@
   --font-family-sans: 'Nunito', system-ui, -apple-system, sans-serif;
 }
 
+:root {
+  --color-primary: #40E0D0;
+  --color-primary-dark: #2AB5A5;
+  --color-secondary: #1E3A5F;
+  --color-secondary-light: #2D4A6F;
+  --color-background: #F0FAFA;
+  --color-card: #FFFFFF;
+  --color-celebration: #FFD700;
+  --color-text: #1E3A5F;
+  --color-text-muted: #6B7C93;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-family-sans);
+  font-family: var(--font-family-sans), 'Nunito', system-ui, -apple-system, sans-serif;
+  background-color: #F0FAFA;
   background-color: var(--color-background);
+  color: #1E3A5F;
   color: var(--color-text);
   min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
+  color: #1E3A5F;
+  color: var(--color-text);
+}
+
+/* Ensure text colors are visible */
+h1, h2, h3, h4, h5, h6 {
+  color: #1E3A5F;
+  color: var(--color-secondary);
+}
+
+p, span, div, label {
+  color: inherit;
+}
+
+/* Fix for text using CSS variables */
+.text-\[--color-secondary\] {
+  color: #1E3A5F !important;
+}
+
+.text-\[--color-text-muted\] {
+  color: #6B7C93 !important;
+}
+
+.text-\[--color-primary\] {
+  color: #40E0D0 !important;
+}
+
+.text-\[--color-celebration\] {
+  color: #FFD700 !important;
 }
 
 /* Custom scrollbar for a polished look */
