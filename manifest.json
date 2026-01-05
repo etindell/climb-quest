@@ -1,0 +1,43 @@
+{
+  "name": "Climb Quest",
+  "short_name": "ClimbQuest",
+  "description": "A fun workout tracker for young climbers! Build strength, track progress, and level up your climbing skills.",
+  "start_url": "/climb-quest/",
+  "scope": "/climb-quest/",
+  "display": "standalone",
+  "background_color": "#F0FAFA",
+  "theme_color": "#40E0D0",
+  "orientation": "portrait",
+  "categories": ["fitness", "health", "sports"],
+  "icons": [
+    {
+      "src": "/climb-quest/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/climb-quest/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Start Workout",
+      "short_name": "Workout",
+      "description": "Generate a new workout",
+      "url": "/climb-quest/",
+      "icons": [{ "src": "/climb-quest/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Progress",
+      "short_name": "Progress",
+      "description": "Check your progress and achievements",
+      "url": "/climb-quest/#/progress",
+      "icons": [{ "src": "/climb-quest/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}

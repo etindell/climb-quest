@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+    <!-- Primary Meta Tags -->
+    <title>Climb Quest - Workout Tracker for Young Climbers</title>
+    <meta name="title" content="Climb Quest - Workout Tracker for Young Climbers" />
+    <meta name="description" content="A fun workout tracker for young climbers! Build strength, track progress, earn achievements, and level up your climbing skills." />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#40E0D0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Climb Quest" />
+    <meta name="application-name" content="Climb Quest" />
+    <meta name="msapplication-TileColor" content="#40E0D0" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/climb-quest/icons/icon.svg" />
+    <link rel="icon" href="/climb-quest/favicon.ico" />
+    <link rel="apple-touch-icon" href="/climb-quest/icons/icon.svg" />
+    <link rel="mask-icon" href="/climb-quest/icons/safari-pinned-tab.svg" color="#40E0D0" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/climb-quest/manifest.json" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Splash screens for iOS -->
+    <meta name="apple-mobile-web-app-orientations" content="portrait" />
+
+    <style>
+      /* Prevent flash of unstyled content */
+      html {
+        background-color: #F0FAFA;
+      }
+
+      /* Loading spinner */
+      .app-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #F0FAFA;
+        font-family: 'Nunito', sans-serif;
+      }
+
+      .app-loading .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #E0E0E0;
+        border-top-color: #40E0D0;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .app-loading .title {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1E3A5F;
+      }
+
+      .app-loading .emoji {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+    <script type="module" crossorigin src="/climb-quest/assets/index-D6XhbcWw.js"></script>
+    <link rel="stylesheet" crossorigin href="/climb-quest/assets/index-xgSt2MCC.css">
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading state while React hydrates -->
+      <div class="app-loading">
+        <div class="emoji">🧗</div>
+        <div class="spinner"></div>
+        <div class="title">Climb Quest</div>
+      </div>
+    </div>
+
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/climb-quest/sw.js')
+            .then(registration => {
+              console.log('SW registered:', registration.scope);
+            })
+            .catch(error => {
+              console.log('SW registration failed:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
