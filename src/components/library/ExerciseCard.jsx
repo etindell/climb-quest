@@ -17,8 +17,9 @@ export function ExerciseCard({ exercise, onClick, selected = false }) {
       hoverable
       className={`
         transition-all duration-200
-        ${selected ? 'ring-2 ring-[--color-primary] bg-[--color-primary]/5' : ''}
+        ${selected ? 'ring-2 ring-teal-400' : ''}
       `}
+      style={selected ? { backgroundColor: 'rgba(64, 224, 208, 0.05)' } : {}}
     >
       <div className="flex items-start gap-3">
         {/* Emoji */}
@@ -28,23 +29,24 @@ export function ExerciseCard({ exercise, onClick, selected = false }) {
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-[--color-secondary] truncate">
+          <h3 className="font-bold truncate" style={{ color: '#1E3A5F' }}>
             {exercise.name}
           </h3>
 
-          <p className="text-sm text-[--color-text-muted] line-clamp-2 mt-1">
+          <p className="text-sm line-clamp-2 mt-1" style={{ color: '#6B7C93' }}>
             {exercise.description}
           </p>
 
           {/* Meta info */}
-          <div className="flex items-center gap-3 mt-2 text-xs text-[--color-text-muted]">
+          <div className="flex items-center gap-3 mt-2 text-xs" style={{ color: '#6B7C93' }}>
             {/* Difficulty */}
             <div className="flex items-center gap-0.5">
               {difficultyStars.map((filled, i) => (
                 <Star
                   key={i}
                   size={12}
-                  className={filled ? 'fill-[--color-celebration] text-[--color-celebration]' : 'text-gray-300'}
+                  className={filled ? 'text-gray-300' : 'text-gray-300'}
+                  style={filled ? { fill: '#FFD700', color: '#FFD700' } : {}}
                 />
               ))}
             </div>
@@ -79,22 +81,23 @@ export function ExerciseCardCompact({ exercise, onClick, selected = false }) {
         flex items-center gap-3 p-3 rounded-xl cursor-pointer
         transition-all duration-200
         ${selected
-          ? 'bg-[--color-primary]/10 ring-1 ring-[--color-primary]'
+          ? 'ring-1 ring-teal-400'
           : 'bg-white hover:bg-gray-50'
         }
       `}
+      style={selected ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' } : {}}
     >
       <span className="text-2xl">{exercise.emoji}</span>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-[--color-secondary] truncate">
+        <p className="font-semibold truncate" style={{ color: '#1E3A5F' }}>
           {exercise.name}
         </p>
-        <p className="text-xs text-[--color-text-muted]">
+        <p className="text-xs" style={{ color: '#6B7C93' }}>
           {exercise.defaultSets} sets
         </p>
       </div>
       {selected && (
-        <div className="w-5 h-5 rounded-full bg-[--color-primary] flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#40E0D0' }}>
           <span className="text-white text-xs">✓</span>
         </div>
       )}

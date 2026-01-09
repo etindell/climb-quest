@@ -1,10 +1,11 @@
 import React from 'react';
 
+// Using explicit colors for Edge compatibility
 const variants = {
-  primary: 'bg-[--color-primary] hover:bg-[--color-primary-dark] text-white',
-  secondary: 'bg-[--color-secondary] hover:bg-[--color-secondary-light] text-white',
-  outline: 'border-2 border-[--color-primary] text-[--color-primary] hover:bg-[--color-primary] hover:text-white',
-  ghost: 'text-[--color-secondary] hover:bg-gray-100',
+  primary: 'bg-teal-400 hover:bg-teal-500 text-white',
+  secondary: 'bg-slate-700 hover:bg-slate-600 text-white',
+  outline: 'border-2 border-teal-400 text-teal-500 hover:bg-teal-400 hover:text-white',
+  ghost: 'text-slate-700 hover:bg-gray-100',
   danger: 'bg-red-500 hover:bg-red-600 text-white'
 };
 
@@ -23,6 +24,7 @@ export function Button({
   fullWidth = false,
   onClick,
   type = 'button',
+  style,
   ...props
 }) {
   return (
@@ -38,8 +40,10 @@ export function Button({
         transition-all duration-200
         active:scale-95
         disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
+        flex items-center justify-center
         ${className}
       `}
+      style={style}
       {...props}
     >
       {children}

@@ -32,7 +32,7 @@ export function WorkoutLogger({ workout, personalRecords, isOpen, onClose, onCom
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Log Workout" size="lg">
       {mode === null && (
-        <ModeSelector onSelect={setMode} exerciseCount={workout.exercises?.length || 0} />
+        <ModeSelector onSelect={setMode} exerciseCount={workout?.exercises?.length || 0} />
       )}
       {mode === 'quick' && (
         <QuickLog
@@ -57,10 +57,10 @@ function ModeSelector({ onSelect, exerciseCount }) {
   return (
     <div className="space-y-4">
       <div className="text-center mb-4">
-        <h2 className="text-xl font-bold text-[--color-secondary]">
+        <h2 className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
           How would you like to log?
         </h2>
-        <p className="text-sm text-[--color-text-muted]">
+        <p className="text-sm" style={{ color: '#6B7C93' }}>
           {exerciseCount} exercises in this workout
         </p>
       </div>
@@ -76,8 +76,8 @@ function ModeSelector({ onSelect, exerciseCount }) {
             <Zap className="text-white" size={28} />
           </div>
           <div className="flex-1">
-            <p className="font-bold text-lg text-[--color-secondary]">Quick Log</p>
-            <p className="text-sm text-[--color-text-muted]">
+            <p className="font-bold text-lg" style={{ color: '#1E3A5F' }}>Quick Log</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>
               Just mark it done and rate how it went
             </p>
           </div>
@@ -96,8 +96,8 @@ function ModeSelector({ onSelect, exerciseCount }) {
             <Clock className="text-white" size={28} />
           </div>
           <div className="flex-1">
-            <p className="font-bold text-lg text-[--color-secondary]">Detailed Log</p>
-            <p className="text-sm text-[--color-text-muted]">
+            <p className="font-bold text-lg" style={{ color: '#1E3A5F' }}>Detailed Log</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>
               Track each exercise and detect PRs!
             </p>
           </div>
@@ -105,7 +105,7 @@ function ModeSelector({ onSelect, exerciseCount }) {
         </div>
       </button>
 
-      <p className="text-center text-xs text-[--color-text-muted] mt-2">
+      <p className="text-center text-xs mt-2" style={{ color: '#6B7C93' }}>
         Tip: Use detailed log to track your personal records!
       </p>
     </div>

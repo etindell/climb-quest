@@ -1,7 +1,11 @@
 import { useLocalStorage } from './useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
+import { format } from 'date-fns';
 import { defaultGoals } from '../data/defaultGoals';
 import { getLevelForXP, XP_REWARDS } from '../data/levels';
+import { DEFAULT_WEEK_TEMPLATE } from '../data/program';
+import { migrateData, needsMigration, validateState, CURRENT_DATA_VERSION } from '../utils/migration';
+import { calculateSessionXP, getCurrentWeekAndCycle } from '../utils/programHelpers';
 
 const initialState = {
   profile: {
@@ -44,11 +48,32 @@ const initialState = {
     notesWritten: 0,
     detailedLogsCount: 0,
     templateUses: {}
-  }
+  },
+  // Program state for structured workout schedule
+  program: {
+    isActive: false,
+    startDate: null,
+    currentWeek: 1,
+    cycleNumber: 1,
+    weekTemplate: null, // null = use DEFAULT_WEEK_TEMPLATE
+    climbingDays: {}, // { 'YYYY-MM-DD': { climbingLogged, climbingNotes, strengthLogged, strengthSession } }
+    exerciseProgress: {}, // Per-exercise progression tracking
+    sessionHistory: [], // Completed session logs
+    isDeloadWeek: false
+  },
+  _version: CURRENT_DATA_VERSION
 };
 
 export function useAppState() {
   const [state, setState] = useLocalStorage('climbquest-data', initialState);
+
+  // Run migration if needed (on first load)
+  if (needsMigration(state)) {
+    const migratedState = migrateData(state);
+    if (migratedState) {
+      setState(validateState(migratedState));
+    }
+  }
 
   // Profile actions
   const updateProfile = (updates) => {
@@ -388,6 +413,240 @@ export function useAppState() {
     setState(initialState);
   };
 
+  // ============================================
+  // PROGRAM ACTIONS (Structured Workout System)
+  // ============================================
+
+  // Start the structured program
+  const startProgram = () => {
+    const now = new Date().toISOString();
+    setState(prev => ({
+      ...prev,
+      program: {
+        ...prev.program,
+        isActive: true,
+        startDate: now,
+        currentWeek: 1,
+        cycleNumber: 1,
+        isDeloadWeek: false
+      }
+    }));
+  };
+
+  // Log a climbing session (separate from strength)
+  const logClimbingSession = (date = new Date(), notes = '') => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const sessionEntry = {
+      id: uuidv4(),
+      date: dateStr,
+      sessionType: 'climb',
+      category: 'climbing',
+      completed: true,
+      completedAt: new Date().toISOString(),
+      notes,
+      xpEarned: 30
+    };
+
+    setState(prev => ({
+      ...prev,
+      program: {
+        ...prev.program,
+        sessionHistory: [...prev.program.sessionHistory, sessionEntry],
+        climbingDays: {
+          ...prev.program.climbingDays,
+          [dateStr]: {
+            ...prev.program.climbingDays[dateStr],
+            climbingLogged: true,
+            climbingLogId: sessionEntry.id,
+            climbingNotes: notes
+          }
+        }
+      }
+    }));
+
+    addXP(30, 'climbing_session');
+    updateStreak();
+  };
+
+  // Mark that user climbed today (deprecated - use logClimbingSession)
+  const markClimbingDay = (date = new Date()) => {
+    logClimbingSession(date, '');
+  };
+
+  // Complete a program session (strength/mini/mobility)
+  const completeSession = (sessionType, sessionData = {}) => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const xpEarned = calculateSessionXP(sessionType, sessionData);
+
+    setState(prev => {
+      // Add to session history
+      const newSessionEntry = {
+        id: uuidv4(),
+        date: today,
+        sessionType,
+        category: 'strength', // All non-climbing sessions are strength category
+        completed: true,
+        completedAt: new Date().toISOString(),
+        ...sessionData,
+        xpEarned
+      };
+
+      const newHistory = [...prev.program.sessionHistory, newSessionEntry];
+
+      // Update climbing day's strength logging status
+      const updatedClimbingDays = { ...prev.program.climbingDays };
+      updatedClimbingDays[today] = {
+        ...updatedClimbingDays[today],
+        strengthLogged: true,
+        strengthLogId: newSessionEntry.id,
+        strengthSession: sessionType
+      };
+
+      return {
+        ...prev,
+        program: {
+          ...prev.program,
+          sessionHistory: newHistory,
+          climbingDays: updatedClimbingDays
+        }
+      };
+    });
+
+    // Award XP and update streak
+    addXP(xpEarned, 'session_completed');
+    updateStreak();
+
+    // Also add to regular workouts for stats compatibility
+    addWorkout({
+      type: sessionType,
+      programSession: true,
+      ...sessionData
+    });
+  };
+
+  // Update progression state for an exercise
+  const updateExerciseProgress = (exerciseId, logData) => {
+    setState(prev => {
+      const existingProgress = prev.program.exerciseProgress[exerciseId] || {
+        logs: [],
+        currentLevel: 'starting'
+      };
+
+      const newLog = {
+        date: format(new Date(), 'yyyy-MM-dd'),
+        timestamp: new Date().toISOString(),
+        ...logData
+      };
+
+      return {
+        ...prev,
+        program: {
+          ...prev.program,
+          exerciseProgress: {
+            ...prev.program.exerciseProgress,
+            [exerciseId]: {
+              ...existingProgress,
+              logs: [...existingProgress.logs, newLog],
+              lastUpdated: new Date().toISOString()
+            }
+          }
+        }
+      };
+    });
+  };
+
+  // Advance exercise to next progression level
+  const advanceExerciseLevel = (exerciseId, newLevel, notes = '') => {
+    setState(prev => {
+      const existingProgress = prev.program.exerciseProgress[exerciseId] || {
+        logs: [],
+        currentLevel: 'starting'
+      };
+
+      return {
+        ...prev,
+        program: {
+          ...prev.program,
+          exerciseProgress: {
+            ...prev.program.exerciseProgress,
+            [exerciseId]: {
+              ...existingProgress,
+              currentLevel: newLevel,
+              lastProgression: new Date().toISOString(),
+              progressionNotes: notes
+            }
+          }
+        }
+      };
+    });
+  };
+
+  // Sync week/cycle based on start date (call on app load)
+  const syncProgramWeek = () => {
+    if (!state.program?.startDate) return;
+
+    const { currentWeek, cycleNumber } = getCurrentWeekAndCycle(state.program.startDate);
+
+    if (state.program.currentWeek !== currentWeek || state.program.cycleNumber !== cycleNumber) {
+      setState(prev => ({
+        ...prev,
+        program: {
+          ...prev.program,
+          currentWeek,
+          cycleNumber,
+          isDeloadWeek: currentWeek === 4
+        }
+      }));
+    }
+  };
+
+  // Manually advance to next week (for testing or manual override)
+  const advanceWeek = () => {
+    setState(prev => {
+      const newWeek = prev.program.currentWeek + 1;
+      const shouldResetCycle = newWeek > 4;
+
+      return {
+        ...prev,
+        program: {
+          ...prev.program,
+          currentWeek: shouldResetCycle ? 1 : newWeek,
+          cycleNumber: shouldResetCycle ? prev.program.cycleNumber + 1 : prev.program.cycleNumber,
+          isDeloadWeek: !shouldResetCycle && newWeek === 4
+        }
+      };
+    });
+  };
+
+  // Update week template (customize schedule)
+  const updateWeekTemplate = (template) => {
+    setState(prev => ({
+      ...prev,
+      program: {
+        ...prev.program,
+        weekTemplate: template
+      }
+    }));
+  };
+
+  // Reset program progress (start fresh)
+  const resetProgram = () => {
+    setState(prev => ({
+      ...prev,
+      program: {
+        isActive: false,
+        startDate: null,
+        currentWeek: 1,
+        cycleNumber: 1,
+        weekTemplate: null,
+        climbingDays: {},
+        exerciseProgress: {},
+        sessionHistory: [],
+        isDeloadWeek: false
+      }
+    }));
+  };
+
   return {
     state,
     // Profile
@@ -423,7 +682,18 @@ export function useAppState() {
     // Data management
     exportData,
     importData,
-    resetData
+    resetData,
+    // Program (Structured Workout System)
+    startProgram,
+    logClimbingSession,
+    markClimbingDay,
+    completeSession,
+    updateExerciseProgress,
+    advanceExerciseLevel,
+    syncProgramWeek,
+    advanceWeek,
+    updateWeekTemplate,
+    resetProgram
   };
 }
 

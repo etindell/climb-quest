@@ -6,6 +6,7 @@ export function Card({
   padding = 'md',
   onClick,
   hoverable = false,
+  style,
   ...props
 }) {
   const paddingSizes = {
@@ -25,6 +26,7 @@ export function Card({
         ${onClick ? 'cursor-pointer' : ''}
         ${className}
       `}
+      style={style}
       {...props}
     >
       {children}
@@ -42,7 +44,7 @@ export function CardHeader({ children, className = '' }) {
 
 export function CardTitle({ children, className = '' }) {
   return (
-    <h3 className={`text-lg font-bold text-[--color-secondary] ${className}`}>
+    <h3 className={`text-lg font-bold ${className}`} style={{ color: '#1E3A5F' }}>
       {children}
     </h3>
   );
@@ -50,7 +52,7 @@ export function CardTitle({ children, className = '' }) {
 
 export function CardDescription({ children, className = '' }) {
   return (
-    <p className={`text-sm text-[--color-text-muted] ${className}`}>
+    <p className={`text-sm ${className}`} style={{ color: '#6B7C93' }}>
       {children}
     </p>
   );

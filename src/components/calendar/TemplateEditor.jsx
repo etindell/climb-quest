@@ -34,7 +34,7 @@ function ExercisePicker({ isOpen, onClose, onSelect, excludeIds }) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2
-                     focus:ring-[--color-primary] focus:border-transparent outline-none"
+                     focus:ring-teal-400 focus:border-transparent outline-none"
         />
 
         {/* Category Filter */}
@@ -42,7 +42,8 @@ function ExercisePicker({ isOpen, onClose, onSelect, excludeIds }) {
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors
-              ${!selectedCategory ? 'bg-[--color-primary] text-white' : 'bg-gray-100 text-gray-700'}`}
+              ${!selectedCategory ? 'text-white' : 'bg-gray-100 text-gray-700'}`}
+            style={!selectedCategory ? { backgroundColor: '#40E0D0' } : undefined}
           >
             All
           </button>
@@ -51,7 +52,8 @@ function ExercisePicker({ isOpen, onClose, onSelect, excludeIds }) {
               key={key}
               onClick={() => setSelectedCategory(key)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors
-                ${selectedCategory === key ? 'bg-[--color-primary] text-white' : 'bg-gray-100 text-gray-700'}`}
+                ${selectedCategory === key ? 'text-white' : 'bg-gray-100 text-gray-700'}`}
+              style={selectedCategory === key ? { backgroundColor: '#40E0D0' } : undefined}
             >
               {cat.emoji} {cat.name}
             </button>
@@ -68,12 +70,12 @@ function ExercisePicker({ isOpen, onClose, onSelect, excludeIds }) {
             >
               <span className="text-2xl">{ex.emoji}</span>
               <div className="flex-1">
-                <p className="font-semibold text-[--color-secondary]">{ex.name}</p>
-                <p className="text-xs text-[--color-text-muted]">
+                <p className="font-semibold" style={{ color: '#1E3A5F' }}>{ex.name}</p>
+                <p className="text-xs" style={{ color: '#6B7C93' }}>
                   {categories[ex.category]?.name} • {ex.defaultSets} sets
                 </p>
               </div>
-              <Plus size={18} className="text-[--color-primary]" />
+              <Plus size={18} style={{ color: '#40E0D0' }} />
             </button>
           ))}
         </div>
@@ -183,7 +185,7 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
         <div className="space-y-4">
           {/* Template Name */}
           <div>
-            <label className="block text-sm font-medium text-[--color-secondary] mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: '#1E3A5F' }}>
               Template Name
             </label>
             <input
@@ -192,13 +194,13 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g., Morning Power Session"
               className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2
-                         focus:ring-[--color-primary] focus:border-transparent outline-none"
+                         focus:ring-teal-400 focus:border-transparent outline-none"
             />
           </div>
 
           {/* Workout Type */}
           <div>
-            <label className="block text-sm font-medium text-[--color-secondary] mb-2">
+            <label className="block text-sm font-medium mb-2" style={{ color: '#1E3A5F' }}>
               Workout Type
             </label>
             <div className="flex flex-wrap gap-2">
@@ -208,12 +210,13 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
                   onClick={() => setType(t.value)}
                   className={`px-3 py-2 rounded-xl border-2 transition-all flex items-center gap-1
                     ${type === t.value
-                      ? 'border-[--color-primary] bg-[--color-primary]/10'
+                      ? 'border-teal-400'
                       : 'border-gray-200 hover:border-gray-300'
                     }`}
+                  style={type === t.value ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' } : undefined}
                 >
                   <span>{t.emoji}</span>
-                  <span className="font-medium text-[--color-secondary]">{t.label}</span>
+                  <span className="font-medium" style={{ color: '#1E3A5F' }}>{t.label}</span>
                 </button>
               ))}
             </div>
@@ -222,7 +225,7 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
           {/* Exercise List */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-[--color-secondary]">
+              <label className="text-sm font-medium" style={{ color: '#1E3A5F' }}>
                 Exercises ({exerciseList.length})
               </label>
               <Button
@@ -263,7 +266,7 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
                     {/* Exercise info */}
                     <span className="text-xl">{ex.emoji}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-[--color-secondary] truncate">
+                      <p className="font-medium truncate" style={{ color: '#1E3A5F' }}>
                         {ex.name}
                       </p>
                     </div>
@@ -278,7 +281,7 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
                         min="1"
                         max="10"
                       />
-                      <span className="text-xs text-[--color-text-muted]">sets</span>
+                      <span className="text-xs" style={{ color: '#6B7C93' }}>sets</span>
                     </div>
 
                     {/* Remove button */}
@@ -293,7 +296,7 @@ export function TemplateEditor({ isOpen, onClose, template, onSave }) {
               </div>
             ) : (
               <div className="text-center py-8 bg-gray-50 rounded-xl">
-                <p className="text-[--color-text-muted]">No exercises added yet</p>
+                <p style={{ color: '#6B7C93' }}>No exercises added yet</p>
                 <Button
                   variant="outline"
                   size="sm"

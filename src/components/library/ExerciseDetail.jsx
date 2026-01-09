@@ -15,7 +15,7 @@ export function ExerciseDetail({ exercise, isOpen, onClose }) {
         <div className="flex items-start gap-4">
           <div className="text-5xl">{exercise.emoji}</div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-[--color-secondary]">
+            <h2 className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
               {exercise.name}
             </h2>
             <div className="flex items-center gap-2 mt-2">
@@ -31,17 +31,17 @@ export function ExerciseDetail({ exercise, isOpen, onClose }) {
 
         {/* Description */}
         <div className="bg-gray-50 rounded-xl p-4">
-          <h3 className="font-semibold text-[--color-secondary] mb-2">How to do it</h3>
-          <p className="text-[--color-text-muted]">{exercise.description}</p>
+          <h3 className="font-semibold mb-2" style={{ color: '#1E3A5F' }}>How to do it</h3>
+          <p style={{ color: '#6B7C93' }}>{exercise.description}</p>
         </div>
 
         {/* Why it helps */}
-        <div className="bg-[--color-primary]/10 rounded-xl p-4">
+        <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(64, 224, 208, 0.1)' }}>
           <div className="flex items-start gap-2">
-            <Lightbulb className="text-[--color-primary] flex-shrink-0 mt-0.5" size={20} />
+            <Lightbulb className="flex-shrink-0 mt-0.5" size={20} style={{ color: '#40E0D0' }} />
             <div>
-              <h3 className="font-semibold text-[--color-secondary] mb-1">Why it helps</h3>
-              <p className="text-[--color-text-muted]">{exercise.whyItHelps}</p>
+              <h3 className="font-semibold mb-1" style={{ color: '#1E3A5F' }}>Why it helps</h3>
+              <p style={{ color: '#6B7C93' }}>{exercise.whyItHelps}</p>
             </div>
           </div>
         </div>
@@ -49,18 +49,18 @@ export function ExerciseDetail({ exercise, isOpen, onClose }) {
         {/* Default Settings */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-gray-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-[--color-secondary]">
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
               {exercise.defaultSets}
             </p>
-            <p className="text-xs text-[--color-text-muted]">Sets</p>
+            <p className="text-xs" style={{ color: '#6B7C93' }}>Sets</p>
           </div>
           <div className="bg-gray-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-[--color-secondary]">
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
               {exercise.trackingType === 'duration'
                 ? exercise.defaultDuration
                 : exercise.defaultReps || '-'}
             </p>
-            <p className="text-xs text-[--color-text-muted]">
+            <p className="text-xs" style={{ color: '#6B7C93' }}>
               {exercise.trackingType === 'duration' ? 'Seconds' : 'Reps'}
             </p>
           </div>
@@ -70,18 +70,19 @@ export function ExerciseDetail({ exercise, isOpen, onClose }) {
                 <Star
                   key={i}
                   size={16}
-                  className={filled ? 'fill-[--color-celebration] text-[--color-celebration]' : 'text-gray-300'}
+                  className={filled ? 'text-gray-300' : 'text-gray-300'}
+                  style={filled ? { fill: '#FFD700', color: '#FFD700' } : {}}
                 />
               ))}
             </div>
-            <p className="text-xs text-[--color-text-muted] mt-1">Difficulty</p>
+            <p className="text-xs mt-1" style={{ color: '#6B7C93' }}>Difficulty</p>
           </div>
         </div>
 
         {/* Assisted Pull-up special case */}
         {exercise.hasAssistVariants && (
           <div className="bg-blue-50 rounded-xl p-4">
-            <h3 className="font-semibold text-[--color-secondary] mb-2">
+            <h3 className="font-semibold mb-2" style={{ color: '#1E3A5F' }}>
               Assistance Levels Available
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -91,7 +92,7 @@ export function ExerciseDetail({ exercise, isOpen, onClose }) {
                 </Badge>
               ))}
             </div>
-            <p className="text-xs text-[--color-text-muted] mt-2">
+            <p className="text-xs mt-2" style={{ color: '#6B7C93' }}>
               Start with more assistance and work your way down!
             </p>
           </div>

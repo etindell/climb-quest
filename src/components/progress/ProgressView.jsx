@@ -66,10 +66,14 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
               flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all
               whitespace-nowrap flex items-center justify-center gap-1
               ${activeSection === tab.key
-                ? 'bg-[--color-primary] text-white'
-                : 'text-[--color-text-muted] hover:bg-gray-100'
+                ? 'text-white'
+                : 'hover:bg-gray-100'
               }
             `}
+            style={activeSection === tab.key
+              ? { backgroundColor: '#40E0D0' }
+              : { color: '#6B7C93' }
+            }
           >
             <span>{tab.emoji}</span>
             <span className="hidden sm:inline">{tab.label}</span>
@@ -87,24 +91,24 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
           <div className="grid grid-cols-2 gap-3">
             <Card className="text-center">
               <p className="text-3xl mb-1">💪</p>
-              <p className="text-2xl font-bold text-[--color-secondary]">
+              <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
                 {personalRecords.pullUps?.length > 0
                   ? Math.max(...personalRecords.pullUps.map(r => r.value))
                   : '-'
                 }
               </p>
-              <p className="text-sm text-[--color-text-muted]">Pull-ups PR</p>
+              <p className="text-sm" style={{ color: '#6B7C93' }}>Pull-ups PR</p>
             </Card>
 
             <Card className="text-center">
               <p className="text-3xl mb-1">🪨</p>
-              <p className="text-2xl font-bold text-[--color-secondary]">
+              <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
                 {personalRecords.boulderGrade?.length > 0
                   ? personalRecords.boulderGrade[personalRecords.boulderGrade.length - 1].value
                   : '-'
                 }
               </p>
-              <p className="text-sm text-[--color-text-muted]">Highest Send</p>
+              <p className="text-sm" style={{ color: '#6B7C93' }}>Highest Send</p>
             </Card>
           </div>
 
@@ -112,10 +116,11 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
           {activeGoals.length > 0 && (
             <Card>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-[--color-secondary]">Active Goals</h3>
+                <h3 className="font-semibold" style={{ color: '#1E3A5F' }}>Active Goals</h3>
                 <button
                   onClick={() => setActiveSection('goals')}
-                  className="text-[--color-primary] text-sm flex items-center"
+                  className="text-sm flex items-center"
+                  style={{ color: '#40E0D0' }}
                 >
                   See all <ChevronRight size={16} />
                 </button>
@@ -123,8 +128,8 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
               <div className="space-y-2">
                 {activeGoals.slice(0, 2).map(goal => (
                   <div key={goal.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-                    <Target className="text-[--color-primary]" size={18} />
-                    <span className="text-sm font-medium text-[--color-secondary] flex-1">
+                    <Target style={{ color: '#40E0D0' }} size={18} />
+                    <span className="text-sm font-medium flex-1" style={{ color: '#1E3A5F' }}>
                       {goal.text}
                     </span>
                   </div>
@@ -136,10 +141,11 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
           {/* Achievements Preview */}
           <Card>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-[--color-secondary]">Recent Badges</h3>
+              <h3 className="font-semibold" style={{ color: '#1E3A5F' }}>Recent Badges</h3>
               <button
                 onClick={() => setActiveSection('achievements')}
-                className="text-[--color-primary] text-sm flex items-center"
+                className="text-sm flex items-center"
+                style={{ color: '#40E0D0' }}
               >
                 See all <ChevronRight size={16} />
               </button>
@@ -149,7 +155,8 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                 {unlockedWithDetails.slice(0, 6).map(achievement => (
                   <div
                     key={achievement.id}
-                    className="flex items-center gap-1 bg-[--color-celebration]/10 px-2 py-1 rounded-full"
+                    className="flex items-center gap-1 px-2 py-1 rounded-full"
+                    style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
                   >
                     <span>{achievement.emoji}</span>
                     <span className="text-xs font-medium text-amber-700">
@@ -159,7 +166,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-[--color-text-muted] text-center py-2">
+              <p className="text-sm text-center py-2" style={{ color: '#6B7C93' }}>
                 Complete workouts to earn badges!
               </p>
             )}
@@ -197,8 +204,8 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                   <Card key={goal.id}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Target className="text-[--color-primary]" size={20} />
-                        <span className="font-semibold text-[--color-secondary]">
+                        <Target style={{ color: '#40E0D0' }} size={20} />
+                        <span className="font-semibold" style={{ color: '#1E3A5F' }}>
                           {goal.text}
                         </span>
                       </div>
@@ -206,7 +213,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                         {goal.type}
                       </Badge>
                     </div>
-                    <p className="text-sm text-[--color-text-muted] mb-3">
+                    <p className="text-sm mb-3" style={{ color: '#6B7C93' }}>
                       Due: {format(new Date(goal.deadline), 'MMM d, yyyy')}
                     </p>
                     <Button
@@ -223,7 +230,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
             ) : (
               <Card className="text-center py-6">
                 <p className="text-3xl mb-2">🎯</p>
-                <p className="text-[--color-text-muted]">No active goals</p>
+                <p style={{ color: '#6B7C93' }}>No active goals</p>
                 <Button
                   variant="outline"
                   size="sm"
@@ -244,10 +251,10 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                     <div className="flex items-center gap-3">
                       <span className="text-xl">✅</span>
                       <div className="flex-1">
-                        <p className="font-medium text-[--color-secondary] line-through opacity-70">
+                        <p className="font-medium line-through opacity-70" style={{ color: '#1E3A5F' }}>
                           {goal.text}
                         </p>
-                        <p className="text-xs text-[--color-text-muted]">
+                        <p className="text-xs" style={{ color: '#6B7C93' }}>
                           Completed {format(new Date(goal.completedDate), 'MMM d, yyyy')}
                         </p>
                       </div>
@@ -265,15 +272,15 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
         <div className="space-y-4">
           <Card className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Trophy className="text-[--color-celebration]" size={24} />
-              <span className="text-2xl font-bold text-[--color-secondary]">
+              <Trophy style={{ color: '#FFD700' }} size={24} />
+              <span className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
                 {unlockedAchievements.length}
               </span>
-              <span className="text-[--color-text-muted]">
+              <span style={{ color: '#6B7C93' }}>
                 / {achievements.filter(a => !a.hidden).length}
               </span>
             </div>
-            <p className="text-sm text-[--color-text-muted]">Badges Unlocked</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Badges Unlocked</p>
           </Card>
 
           {/* Achievement categories */}
@@ -291,7 +298,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
 
             return (
               <Card key={category}>
-                <h3 className="font-semibold text-[--color-secondary] mb-3">{categoryLabel}</h3>
+                <h3 className="font-semibold mb-3" style={{ color: '#1E3A5F' }}>{categoryLabel}</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {categoryAchievements.map(achievement => {
                     const isUnlocked = unlockedAchievements.some(ua => ua.id === achievement.id);
@@ -300,11 +307,9 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                         key={achievement.id}
                         className={`
                           p-3 rounded-xl text-center transition-all
-                          ${isUnlocked
-                            ? 'bg-[--color-celebration]/10'
-                            : 'bg-gray-100 opacity-50'
-                          }
+                          ${!isUnlocked ? 'bg-gray-100 opacity-50' : ''}
                         `}
+                        style={isUnlocked ? { backgroundColor: 'rgba(255, 215, 0, 0.1)' } : {}}
                       >
                         <p className="text-2xl mb-1">
                           {isUnlocked ? achievement.emoji : '🔒'}
@@ -312,7 +317,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
                         <p className={`text-xs font-medium ${isUnlocked ? 'text-amber-700' : 'text-gray-500'}`}>
                           {achievement.name}
                         </p>
-                        <p className="text-[10px] text-[--color-text-muted] mt-0.5">
+                        <p className="text-[10px] mt-0.5" style={{ color: '#6B7C93' }}>
                           {achievement.description}
                         </p>
                       </div>
@@ -333,7 +338,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[--color-secondary] mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: '#1E3A5F' }}>
               What's your goal?
             </label>
             <input
@@ -342,19 +347,19 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
               onChange={(e) => setNewGoal(prev => ({ ...prev, text: e.target.value }))}
               placeholder="e.g., Do 10 pull-ups"
               className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2
-                         focus:ring-[--color-primary] focus:border-transparent outline-none"
+                         focus:ring-teal-400 focus:border-transparent outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[--color-secondary] mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: '#1E3A5F' }}>
               Goal Type
             </label>
             <select
               value={newGoal.type}
               onChange={(e) => setNewGoal(prev => ({ ...prev, type: e.target.value }))}
               className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2
-                         focus:ring-[--color-primary] focus:border-transparent outline-none"
+                         focus:ring-teal-400 focus:border-transparent outline-none"
             >
               <option value="custom">Custom</option>
               <option value="grade">Climbing Grade</option>
@@ -364,7 +369,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[--color-secondary] mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: '#1E3A5F' }}>
               Target Date
             </label>
             <input
@@ -372,7 +377,7 @@ export function ProgressView({ appState, onAddGoal, onCompleteGoal, onAddPersona
               value={newGoal.deadline}
               onChange={(e) => setNewGoal(prev => ({ ...prev, deadline: e.target.value }))}
               className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2
-                         focus:ring-[--color-primary] focus:border-transparent outline-none"
+                         focus:ring-teal-400 focus:border-transparent outline-none"
             />
           </div>
 

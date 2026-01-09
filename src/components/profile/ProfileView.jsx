@@ -6,9 +6,20 @@ import {
 } from 'lucide-react';
 import { PageContainer, PageSection } from '../layout';
 import { Card, Button, Badge, Modal, ProgressBar } from '../common';
+import { ProgramSettings } from '../program';
 import { getLevelForXP, getProgressToNextLevel, levels } from '../../data/levels';
 
-export function ProfileView({ appState, updateProfile, exportData, importData, resetData }) {
+export function ProfileView({
+  appState,
+  updateProfile,
+  exportData,
+  importData,
+  resetData,
+  // Program actions
+  onResetProgram,
+  onUpdateWeekTemplate,
+  onAdvanceWeek
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(appState.profile.name);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -66,7 +77,10 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
       {/* Profile Card */}
       <Card className="mb-4">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 bg-[--color-primary]/20 rounded-full flex items-center justify-center">
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: 'rgba(64, 224, 208, 0.2)' }}
+          >
             <span className="text-3xl">{levelInfo.emoji}</span>
           </div>
           <div className="flex-1">
@@ -77,31 +91,33 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   className="flex-1 p-2 border border-gray-200 rounded-lg focus:ring-2
-                             focus:ring-[--color-primary] focus:border-transparent outline-none"
+                             focus:ring-teal-400 focus:border-transparent outline-none"
                   placeholder="Your name"
                   autoFocus
                 />
                 <button
                   onClick={handleSaveName}
-                  className="p-2 bg-[--color-primary] text-white rounded-lg"
+                  className="p-2 text-white rounded-lg"
+                  style={{ backgroundColor: '#40E0D0' }}
                 >
                   <Check size={16} />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-[--color-secondary]">
+                <h2 className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
                   {profile.name || 'Climber'}
                 </h2>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="p-1 text-[--color-text-muted] hover:text-[--color-secondary]"
+                  className="p-1 hover:opacity-70"
+                  style={{ color: '#6B7C93' }}
                 >
                   <Edit2 size={14} />
                 </button>
               </div>
             )}
-            <p className="text-[--color-text-muted]">
+            <p style={{ color: '#6B7C93' }}>
               Level {levelInfo.level} - {levelInfo.name}
             </p>
           </div>
@@ -113,7 +129,7 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
           showLabel
           label={`${profile.totalXP} XP`}
         />
-        <p className="text-xs text-[--color-text-muted] mt-1">
+        <p className="text-xs mt-1" style={{ color: '#6B7C93' }}>
           {progressInfo.xpToNext > 0
             ? `${progressInfo.xpToNext} XP to ${levels[levelInfo.level]?.name || 'next level'}`
             : 'Max level reached!'
@@ -125,27 +141,27 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
       <PageSection title="Stats">
         <div className="grid grid-cols-2 gap-3">
           <Card className="text-center">
-            <Dumbbell className="mx-auto text-[--color-primary] mb-2" size={24} />
-            <p className="text-2xl font-bold text-[--color-secondary]">{totalWorkouts}</p>
-            <p className="text-sm text-[--color-text-muted]">Workouts</p>
+            <Dumbbell className="mx-auto mb-2" style={{ color: '#40E0D0' }} size={24} />
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>{totalWorkouts}</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Workouts</p>
           </Card>
 
           <Card className="text-center">
             <Flame className="mx-auto text-orange-500 mb-2" size={24} />
-            <p className="text-2xl font-bold text-[--color-secondary]">{streaks.best}</p>
-            <p className="text-sm text-[--color-text-muted]">Best Streak</p>
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>{streaks.best}</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Best Streak</p>
           </Card>
 
           <Card className="text-center">
-            <Trophy className="mx-auto text-[--color-celebration] mb-2" size={24} />
-            <p className="text-2xl font-bold text-[--color-secondary]">{achievements.length}</p>
-            <p className="text-sm text-[--color-text-muted]">Badges</p>
+            <Trophy className="mx-auto mb-2" style={{ color: '#FFD700' }} size={24} />
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>{achievements.length}</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Badges</p>
           </Card>
 
           <Card className="text-center">
-            <Calendar className="mx-auto text-[--color-secondary] mb-2" size={24} />
-            <p className="text-2xl font-bold text-[--color-secondary]">{daysSinceStart}</p>
-            <p className="text-sm text-[--color-text-muted]">Days Active</p>
+            <Calendar className="mx-auto mb-2" style={{ color: '#1E3A5F' }} size={24} />
+            <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>{daysSinceStart}</p>
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Days Active</p>
           </Card>
         </div>
       </PageSection>
@@ -163,16 +179,16 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
                   key={level.level}
                   className={`
                     flex items-center gap-3 p-2 rounded-lg
-                    ${isCurrent ? 'bg-[--color-primary]/10' : ''}
                     ${!isUnlocked ? 'opacity-50' : ''}
                   `}
+                  style={isCurrent ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' } : {}}
                 >
                   <span className="text-2xl">{level.emoji}</span>
                   <div className="flex-1">
-                    <p className={`font-medium ${isCurrent ? 'text-[--color-primary]' : 'text-[--color-secondary]'}`}>
+                    <p className="font-medium" style={{ color: isCurrent ? '#40E0D0' : '#1E3A5F' }}>
                       {level.name}
                     </p>
-                    <p className="text-xs text-[--color-text-muted]">{level.minXP} XP</p>
+                    <p className="text-xs" style={{ color: '#6B7C93' }}>{level.minXP} XP</p>
                   </div>
                   {isUnlocked && <Check size={16} className="text-green-500" />}
                 </div>
@@ -181,6 +197,18 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
           </div>
         </Card>
       </PageSection>
+
+      {/* Training Program */}
+      {appState.program?.isActive && (
+        <PageSection title="Training Program">
+          <ProgramSettings
+            programState={appState.program}
+            onResetProgram={onResetProgram}
+            onUpdateWeekTemplate={onUpdateWeekTemplate}
+            onAdvanceWeek={onAdvanceWeek}
+          />
+        </PageSection>
+      )}
 
       {/* Data Management */}
       <PageSection title="Data">
@@ -209,14 +237,14 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
         title="Import Data"
       >
         <div className="space-y-4">
-          <p className="text-sm text-[--color-text-muted]">
+          <p className="text-sm" style={{ color: '#6B7C93' }}>
             Paste your backup JSON data below. This will overwrite all existing data.
           </p>
           <textarea
             value={importText}
             onChange={(e) => setImportText(e.target.value)}
             className="w-full h-40 p-3 border border-gray-200 rounded-xl resize-none
-                       focus:ring-2 focus:ring-[--color-primary] focus:border-transparent
+                       focus:ring-2 focus:ring-teal-400 focus:border-transparent
                        outline-none font-mono text-sm"
             placeholder='{"profile": {...}, "workouts": [...]}'
           />
@@ -238,7 +266,7 @@ export function ProfileView({ appState, updateProfile, exportData, importData, r
         title="Reset All Data?"
       >
         <div className="space-y-4">
-          <p className="text-[--color-text-muted]">
+          <p style={{ color: '#6B7C93' }}>
             This will delete all your workouts, achievements, and progress. This action cannot be undone!
           </p>
           <div className="flex gap-3">

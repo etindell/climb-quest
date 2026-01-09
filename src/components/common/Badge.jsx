@@ -1,13 +1,14 @@
 import React from 'react';
 
+// Using explicit colors for Edge compatibility
 const variants = {
   default: 'bg-gray-100 text-gray-800',
-  primary: 'bg-[--color-primary]/20 text-[--color-primary-dark]',
-  secondary: 'bg-[--color-secondary]/20 text-[--color-secondary]',
+  primary: 'bg-teal-100 text-teal-700',
+  secondary: 'bg-slate-100 text-slate-700',
   success: 'bg-green-100 text-green-800',
   warning: 'bg-yellow-100 text-yellow-800',
   danger: 'bg-red-100 text-red-800',
-  celebration: 'bg-[--color-celebration]/20 text-amber-700'
+  celebration: 'bg-amber-100 text-amber-700'
 };
 
 const sizes = {

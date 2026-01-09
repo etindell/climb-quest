@@ -20,8 +20,8 @@ function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 rounded-lg shadow-lg border border-gray-100 text-sm">
-        <p className="font-medium text-[--color-secondary]">{label}</p>
-        <p className="text-[--color-primary] font-bold">
+        <p className="font-medium" style={{ color: '#1E3A5F' }}>{label}</p>
+        <p className="font-bold" style={{ color: '#40E0D0' }}>
           V{payload[0].value}
         </p>
       </div>
@@ -69,7 +69,7 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
   return (
     <Card>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-[--color-secondary]">Climbing Grades</h3>
+        <h3 className="font-semibold" style={{ color: '#1E3A5F' }}>Climbing Grades</h3>
         <Button size="sm" variant="outline" onClick={() => setShowAddModal(true)}>
           + Log Send
         </Button>
@@ -77,19 +77,19 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
 
       {/* Current maxes */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-[--color-primary]/10 rounded-xl p-3 text-center">
+        <div className="rounded-xl p-3 text-center" style={{ backgroundColor: 'rgba(64, 224, 208, 0.1)' }}>
           <p className="text-3xl mb-1">🪨</p>
-          <p className="text-xl font-bold text-[--color-secondary]">
+          <p className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
             {currentBoulderMax || '-'}
           </p>
-          <p className="text-xs text-[--color-text-muted]">Boulder Max</p>
+          <p className="text-xs" style={{ color: '#6B7C93' }}>Boulder Max</p>
         </div>
         <div className="bg-orange-100 rounded-xl p-3 text-center">
           <p className="text-3xl mb-1">🧗</p>
-          <p className="text-xl font-bold text-[--color-secondary]">
+          <p className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
             {currentRopeMax || '-'}
           </p>
-          <p className="text-xs text-[--color-text-muted]">Rope Max</p>
+          <p className="text-xs" style={{ color: '#6B7C93' }}>Rope Max</p>
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
       ) : (
         <div className="h-40 flex flex-col items-center justify-center text-center bg-gray-50 rounded-xl">
           <p className="text-3xl mb-2">📈</p>
-          <p className="text-[--color-text-muted]">Log your sends to track progress!</p>
+          <p style={{ color: '#6B7C93' }}>Log your sends to track progress!</p>
         </div>
       )}
 
@@ -133,7 +133,7 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full">
-            <h3 className="text-lg font-bold text-[--color-secondary] mb-4">Log a Send</h3>
+            <h3 className="text-lg font-bold mb-4" style={{ color: '#1E3A5F' }}>Log a Send</h3>
 
             {/* Type selector */}
             <div className="flex gap-2 mb-4">
@@ -141,9 +141,10 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
                 onClick={() => setGradeType('boulder')}
                 className={`flex-1 p-3 rounded-xl border-2 transition-all ${
                   gradeType === 'boulder'
-                    ? 'border-[--color-primary] bg-[--color-primary]/10'
+                    ? 'border-teal-400'
                     : 'border-gray-200'
                 }`}
+                style={gradeType === 'boulder' ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' } : {}}
               >
                 <span className="text-xl">🪨</span>
                 <p className="text-sm font-medium">Boulder</p>
@@ -152,9 +153,10 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
                 onClick={() => setGradeType('rope')}
                 className={`flex-1 p-3 rounded-xl border-2 transition-all ${
                   gradeType === 'rope'
-                    ? 'border-[--color-primary] bg-[--color-primary]/10'
+                    ? 'border-teal-400'
                     : 'border-gray-200'
                 }`}
+                style={gradeType === 'rope' ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' } : {}}
               >
                 <span className="text-xl">🧗</span>
                 <p className="text-sm font-medium">Rope</p>
@@ -163,7 +165,7 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
 
             {/* Grade input */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-[--color-secondary] mb-2">
+              <label className="block text-sm font-medium mb-2" style={{ color: '#1E3A5F' }}>
                 What grade did you send?
               </label>
               {gradeType === 'boulder' ? (
@@ -174,9 +176,10 @@ export function GradeProgression({ personalRecords, onAddGrade }) {
                       onClick={() => setNewGrade(grade)}
                       className={`p-2 rounded-lg text-sm font-medium transition-all ${
                         newGrade === grade
-                          ? 'bg-[--color-primary] text-white'
+                          ? 'text-white'
                           : 'bg-gray-100 hover:bg-gray-200'
                       }`}
+                      style={newGrade === grade ? { backgroundColor: '#40E0D0' } : {}}
                     >
                       {grade}
                     </button>

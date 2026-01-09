@@ -4,20 +4,56 @@ import {
   startOfMonth, endOfMonth, addMonths, subMonths, isSameMonth, isToday,
   isSameDay, isBefore
 } from 'date-fns';
-import { ChevronLeft, ChevronRight, Calendar, List, Plus, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, List, Plus, Play, Dumbbell, Zap, Leaf } from 'lucide-react';
 import { PageContainer, PageSection } from '../layout';
 import { Card, Button, Badge } from '../common';
 import { TemplateManager } from './TemplateManager';
 import { ScheduleModal } from './ScheduleModal';
 import { TemplateEditor } from './TemplateEditor';
+import { WeekOverview, DeloadIndicator } from '../program';
+import { DEFAULT_WEEK_TEMPLATE, SESSION_TYPES, SESSIONS } from '../../data/program';
+import { getWeekProgress } from '../../utils/programHelpers';
 
 const WORKOUT_TYPE_COLORS = {
-  technique: 'bg-[--color-primary]',
+  technique: { backgroundColor: '#40E0D0' },
   strength: 'bg-orange-400',
   endurance: 'bg-green-500',
   mixed: 'bg-purple-500',
-  rest: 'bg-gray-300'
+  rest: 'bg-gray-300',
+  // Program session types
+  strength1: 'bg-blue-500',
+  strength2: 'bg-blue-500',
+  miniA: 'bg-amber-400',
+  miniB: 'bg-amber-400',
+  mobility: 'bg-green-400'
 };
+
+// Get session type for a given day of week from program template
+function getSessionForDayOfWeek(dayOfWeek, weekTemplate = DEFAULT_WEEK_TEMPLATE) {
+  const dayConfig = weekTemplate.find(d => d.day === dayOfWeek);
+  return dayConfig ? dayConfig.session : null;
+}
+
+// Get emoji for session type
+function getSessionEmoji(sessionType) {
+  switch (sessionType) {
+    case SESSION_TYPES.STRENGTH_1:
+    case SESSION_TYPES.STRENGTH_2:
+      return '💪';
+    case SESSION_TYPES.MINI_A:
+    case SESSION_TYPES.MINI_B:
+      return '⚡';
+    case SESSION_TYPES.MOBILITY:
+      return '🧘';
+    case SESSION_TYPES.REST:
+      return '😴';
+    case SESSION_TYPES.CLIMB:
+    case SESSION_TYPES.CLIMB_EASY:
+      return '🧗';
+    default:
+      return null;
+  }
+}
 
 function WeekView({ currentDate, workouts, scheduledWorkouts, onSelectDate, selectedDate }) {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -45,17 +81,29 @@ function WeekView({ currentDate, workouts, scheduledWorkouts, onSelectDate, sele
             onClick={() => onSelectDate(day)}
             className={`
               p-2 rounded-xl text-center transition-all
-              ${isSelected ? 'bg-[--color-primary] text-white' : ''}
-              ${today && !isSelected ? 'ring-2 ring-[--color-primary]' : ''}
-              ${hasWorkout && !isSelected ? 'bg-[--color-primary]/10' : ''}
+              ${isSelected ? 'text-white' : ''}
+              ${today && !isSelected ? 'ring-2 ring-teal-400' : ''}
               ${!hasWorkout && !isSelected && !today ? 'bg-white' : ''}
               hover:opacity-80
             `}
+            style={
+              isSelected
+                ? { backgroundColor: '#40E0D0' }
+                : hasWorkout && !isSelected
+                  ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' }
+                  : undefined
+            }
           >
-            <p className={`text-xs ${isSelected ? 'text-white/80' : 'text-[--color-text-muted]'}`}>
+            <p
+              className={`text-xs ${isSelected ? 'text-white/80' : ''}`}
+              style={!isSelected ? { color: '#6B7C93' } : undefined}
+            >
               {format(day, 'EEE')}
             </p>
-            <p className={`text-lg font-bold ${isSelected ? 'text-white' : today ? 'text-[--color-primary]' : 'text-[--color-secondary]'}`}>
+            <p
+              className={`text-lg font-bold ${isSelected ? 'text-white' : ''}`}
+              style={!isSelected ? (today ? { color: '#40E0D0' } : { color: '#1E3A5F' }) : undefined}
+            >
               {format(day, 'd')}
             </p>
             {hasWorkout && !isSelected && (
@@ -63,13 +111,14 @@ function WeekView({ currentDate, workouts, scheduledWorkouts, onSelectDate, sele
                 {completed.slice(0, 2).map((w, i) => (
                   <div
                     key={`c-${i}`}
-                    className={`w-2 h-2 rounded-full ${WORKOUT_TYPE_COLORS[w.type] || WORKOUT_TYPE_COLORS.mixed}`}
+                    className={`w-2 h-2 rounded-full ${typeof WORKOUT_TYPE_COLORS[w.type] === 'string' ? WORKOUT_TYPE_COLORS[w.type] : ''}`}
+                    style={typeof WORKOUT_TYPE_COLORS[w.type] === 'object' ? WORKOUT_TYPE_COLORS[w.type] : (WORKOUT_TYPE_COLORS[w.type] ? undefined : WORKOUT_TYPE_COLORS.mixed)}
                   />
                 ))}
                 {scheduled.slice(0, 2 - completed.length).map((_, i) => (
                   <div
                     key={`s-${i}`}
-                    className="w-2 h-2 rounded-full border-2 border-[--color-primary] bg-transparent"
+                    className="w-2 h-2 rounded-full border-2 border-teal-400 bg-transparent"
                   />
                 ))}
               </div>
@@ -99,7 +148,7 @@ function MonthView({ currentDate, workouts, scheduledWorkouts, onSelectDate, sel
     <div>
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center text-xs text-[--color-text-muted] py-1">
+          <div key={day} className="text-center text-xs py-1" style={{ color: '#6B7C93' }}>
             {day}
           </div>
         ))}
@@ -121,14 +170,23 @@ function MonthView({ currentDate, workouts, scheduledWorkouts, onSelectDate, sel
                 aspect-square rounded-lg flex flex-col items-center justify-center
                 transition-all text-sm
                 ${!inMonth ? 'opacity-30' : ''}
-                ${isSelected ? 'bg-[--color-primary] text-white' : ''}
-                ${today && !isSelected ? 'ring-2 ring-[--color-primary] bg-[--color-primary]/10' : ''}
-                ${hasWorkout && !today && !isSelected ? 'bg-[--color-primary]/10' : ''}
+                ${isSelected ? 'text-white' : ''}
+                ${today && !isSelected ? 'ring-2 ring-teal-400' : ''}
                 ${!hasWorkout && !today && !isSelected ? 'bg-white' : ''}
                 hover:opacity-80
               `}
+              style={
+                isSelected
+                  ? { backgroundColor: '#40E0D0' }
+                  : (today && !isSelected) || (hasWorkout && !today && !isSelected)
+                    ? { backgroundColor: 'rgba(64, 224, 208, 0.1)' }
+                    : undefined
+              }
             >
-              <span className={isSelected ? 'text-white font-bold' : today ? 'font-bold text-[--color-primary]' : 'text-[--color-secondary]'}>
+              <span
+                className={isSelected ? 'text-white font-bold' : today ? 'font-bold' : ''}
+                style={!isSelected ? (today ? { color: '#40E0D0' } : { color: '#1E3A5F' }) : undefined}
+              >
                 {format(day, 'd')}
               </span>
               {hasWorkout && !isSelected && (
@@ -136,11 +194,12 @@ function MonthView({ currentDate, workouts, scheduledWorkouts, onSelectDate, sel
                   {completed.slice(0, 2).map((w, i) => (
                     <div
                       key={`c-${i}`}
-                      className={`w-1.5 h-1.5 rounded-full ${WORKOUT_TYPE_COLORS[w.type] || WORKOUT_TYPE_COLORS.mixed}`}
+                      className={`w-1.5 h-1.5 rounded-full ${typeof WORKOUT_TYPE_COLORS[w.type] === 'string' ? WORKOUT_TYPE_COLORS[w.type] : ''}`}
+                      style={typeof WORKOUT_TYPE_COLORS[w.type] === 'object' ? WORKOUT_TYPE_COLORS[w.type] : (WORKOUT_TYPE_COLORS[w.type] ? undefined : WORKOUT_TYPE_COLORS.mixed)}
                     />
                   ))}
                   {scheduled.length > 0 && completed.length < 2 && (
-                    <div className="w-1.5 h-1.5 rounded-full border border-[--color-primary] bg-transparent" />
+                    <div className="w-1.5 h-1.5 rounded-full border border-teal-400 bg-transparent" />
                   )}
                 </div>
               )}
@@ -168,7 +227,10 @@ export function CalendarView({
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [editingTemplate, setEditingTemplate] = useState(null);
 
-  const { workouts, scheduledWorkouts, templates } = appState;
+  const { workouts, scheduledWorkouts, templates, program } = appState;
+
+  // Get week progress if program is active
+  const weekProgress = program?.isActive ? getWeekProgress(program) : null;
 
   const navigatePrev = () => {
     if (viewMode === 'week') {
@@ -273,7 +335,7 @@ export function CalendarView({
             <ChevronLeft size={20} />
           </button>
 
-          <h2 className="text-lg font-bold text-[--color-secondary]">
+          <h2 className="text-lg font-bold" style={{ color: '#1E3A5F' }}>
             {viewMode === 'week'
               ? `Week of ${format(startOfWeek(currentDate, { weekStartsOn: 0 }), 'MMM d')}`
               : format(currentDate, 'MMMM yyyy')
@@ -296,10 +358,11 @@ export function CalendarView({
               flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all
               flex items-center justify-center gap-1
               ${viewMode === 'week'
-                ? 'bg-white text-[--color-secondary] shadow-sm'
-                : 'text-[--color-text-muted]'
+                ? 'bg-white shadow-sm'
+                : ''
               }
             `}
+            style={viewMode === 'week' ? { color: '#1E3A5F' } : { color: '#6B7C93' }}
           >
             <List size={16} />
             Week
@@ -310,10 +373,11 @@ export function CalendarView({
               flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all
               flex items-center justify-center gap-1
               ${viewMode === 'month'
-                ? 'bg-white text-[--color-secondary] shadow-sm'
-                : 'text-[--color-text-muted]'
+                ? 'bg-white shadow-sm'
+                : ''
               }
             `}
+            style={viewMode === 'month' ? { color: '#1E3A5F' } : { color: '#6B7C93' }}
           >
             <Calendar size={16} />
             Month
@@ -342,26 +406,94 @@ export function CalendarView({
         {/* Legend */}
         <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[--color-primary]" />
-            <span className="text-xs text-[--color-text-muted]">Completed</span>
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#40E0D0' }} />
+            <span className="text-xs" style={{ color: '#6B7C93' }}>Completed</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full border-2 border-[--color-primary] bg-transparent" />
-            <span className="text-xs text-[--color-text-muted]">Scheduled</span>
+            <div className="w-2.5 h-2.5 rounded-full border-2 border-teal-400 bg-transparent" />
+            <span className="text-xs" style={{ color: '#6B7C93' }}>Scheduled</span>
           </div>
         </div>
       </Card>
+
+      {/* Program Week Overview */}
+      {weekProgress && (
+        <Card className="mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h3 className="font-bold" style={{ color: '#1E3A5F' }}>
+                Training Week {weekProgress.currentWeek}
+              </h3>
+              <p className="text-sm" style={{ color: '#6B7C93' }}>
+                Cycle {weekProgress.cycleNumber}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {weekProgress.isDeloadWeek && <DeloadIndicator />}
+              <Badge variant="primary">
+                {weekProgress.completedCount}/{weekProgress.totalRequired} sessions
+              </Badge>
+            </div>
+          </div>
+
+          {/* Session schedule (multi-session support) */}
+          <div className="grid grid-cols-7 gap-1">
+            {weekProgress.weekDays.map((day) => (
+              <div
+                key={day.dateStr}
+                className={`text-center p-2 rounded-lg ${
+                  day.isToday ? 'bg-teal-50 ring-1 ring-teal-200' :
+                  day.allComplete ? 'bg-green-50' : 'bg-gray-50'
+                }`}
+              >
+                <p className="text-xs font-medium" style={{ color: '#6B7C93' }}>
+                  {format(day.date, 'EEE')}
+                </p>
+                <div className="flex justify-center gap-0.5 my-1 min-h-[24px]">
+                  {day.sessions?.map((s, idx) => (
+                    <span key={idx} className="text-sm">
+                      {s.completed ? '✅' : getSessionEmoji(s.sessionId)}
+                    </span>
+                  ))}
+                  {day.isRestDay && <span className="text-lg">😴</span>}
+                </div>
+                <p className="text-xs" style={{ color: '#6B7C93' }}>
+                  {day.isRestDay
+                    ? 'Rest'
+                    : day.sessions?.map(s =>
+                        s.sessionId === SESSION_TYPES.STRENGTH_1 ? 'S1' :
+                        s.sessionId === SESSION_TYPES.STRENGTH_2 ? 'S2' :
+                        s.sessionId === SESSION_TYPES.MINI_A ? 'MA' :
+                        s.sessionId === SESSION_TYPES.MINI_B ? 'MB' :
+                        s.sessionId === SESSION_TYPES.MOBILITY ? 'Mob' :
+                        s.sessionId === SESSION_TYPES.CLIMB ? 'Cl' : '?'
+                      ).join('+')}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center justify-center gap-3 mt-3 pt-3 border-t border-gray-100 text-xs flex-wrap" style={{ color: '#6B7C93' }}>
+            <span>🧗 Climb</span>
+            <span>💪 Strength</span>
+            <span>⚡ Mini</span>
+            <span>🧘 Mobility</span>
+          </div>
+        </Card>
+      )}
 
       {/* Selected Date Details */}
       {selectedDate && (
         <Card className="mb-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-[--color-secondary]">
+            <h3 className="font-bold" style={{ color: '#1E3A5F' }}>
               {isToday(selectedDate) ? 'Today' : format(selectedDate, 'EEEE, MMM d')}
             </h3>
             <button
               onClick={() => setSelectedDate(null)}
-              className="text-[--color-text-muted] text-sm hover:text-[--color-secondary]"
+              className="text-sm hover:opacity-80"
+              style={{ color: '#6B7C93' }}
             >
               Close
             </button>
@@ -370,18 +502,21 @@ export function CalendarView({
           {/* Completed workouts */}
           {selectedDateWorkouts.length > 0 && (
             <div className="space-y-2 mb-3">
-              <p className="text-xs font-medium text-[--color-text-muted] uppercase">Completed</p>
+              <p className="text-xs font-medium uppercase" style={{ color: '#6B7C93' }}>Completed</p>
               {selectedDateWorkouts.map(workout => (
                 <div
                   key={workout.id}
                   className="flex items-center gap-3 p-3 bg-green-50 rounded-lg"
                 >
-                  <div className={`w-3 h-3 rounded-full ${WORKOUT_TYPE_COLORS[workout.type] || WORKOUT_TYPE_COLORS.mixed}`} />
+                  <div
+                    className={`w-3 h-3 rounded-full ${typeof WORKOUT_TYPE_COLORS[workout.type] === 'string' ? WORKOUT_TYPE_COLORS[workout.type] : ''}`}
+                    style={typeof WORKOUT_TYPE_COLORS[workout.type] === 'object' ? WORKOUT_TYPE_COLORS[workout.type] : undefined}
+                  />
                   <div className="flex-1">
-                    <p className="font-medium text-[--color-secondary]">
+                    <p className="font-medium" style={{ color: '#1E3A5F' }}>
                       {workout.type ? workout.type.charAt(0).toUpperCase() + workout.type.slice(1) : 'Workout'}
                     </p>
-                    <p className="text-xs text-[--color-text-muted]">
+                    <p className="text-xs" style={{ color: '#6B7C93' }}>
                       {workout.exercises?.length || 0} exercises
                     </p>
                   </div>
@@ -394,20 +529,21 @@ export function CalendarView({
           {/* Scheduled workouts */}
           {selectedDateScheduled.length > 0 && (
             <div className="space-y-2 mb-3">
-              <p className="text-xs font-medium text-[--color-text-muted] uppercase">Scheduled</p>
+              <p className="text-xs font-medium uppercase" style={{ color: '#6B7C93' }}>Scheduled</p>
               {selectedDateScheduled.map((scheduled, index) => {
                 const template = templates.find(t => t.id === scheduled.templateId);
                 return (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 bg-[--color-primary]/10 rounded-lg"
+                    className="flex items-center gap-3 p-3 rounded-lg"
+                    style={{ backgroundColor: 'rgba(64, 224, 208, 0.1)' }}
                   >
-                    <div className="w-3 h-3 rounded-full border-2 border-[--color-primary]" />
+                    <div className="w-3 h-3 rounded-full border-2 border-teal-400" />
                     <div className="flex-1">
-                      <p className="font-medium text-[--color-secondary]">
+                      <p className="font-medium" style={{ color: '#1E3A5F' }}>
                         {template?.name || 'Scheduled Workout'}
                       </p>
-                      <p className="text-xs text-[--color-text-muted]">
+                      <p className="text-xs" style={{ color: '#6B7C93' }}>
                         ~{template?.estimatedMinutes || 30} min
                       </p>
                     </div>
@@ -427,9 +563,9 @@ export function CalendarView({
           {/* Empty state */}
           {selectedDateWorkouts.length === 0 && selectedDateScheduled.length === 0 && (
             <div className="text-center py-4">
-              <p className="text-[--color-text-muted]">No workouts on this day</p>
+              <p style={{ color: '#6B7C93' }}>No workouts on this day</p>
               {!isBefore(selectedDate, new Date()) && templates.length > 0 && (
-                <p className="text-sm text-[--color-text-muted] mt-1">
+                <p className="text-sm mt-1" style={{ color: '#6B7C93' }}>
                   Schedule a workout from your templates below!
                 </p>
               )}

@@ -57,7 +57,7 @@ export function Modal({
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between p-4 border-b border-gray-100">
             {title && (
-              <h2 className="text-xl font-bold text-[--color-secondary]">
+              <h2 className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
                 {title}
               </h2>
             )}

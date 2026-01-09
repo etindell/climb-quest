@@ -19,23 +19,24 @@ export function ProgressBar({
     xl: 'h-6'
   };
 
+  // Using explicit colors for Edge compatibility
   const colors = {
-    primary: 'bg-[--color-primary]',
-    secondary: 'bg-[--color-secondary]',
+    primary: 'bg-teal-400',
+    secondary: 'bg-slate-700',
     success: 'bg-green-500',
     warning: 'bg-yellow-500',
     danger: 'bg-red-500',
-    celebration: 'bg-[--color-celebration]'
+    celebration: 'bg-amber-400'
   };
 
   return (
     <div className={`w-full ${className}`}>
       {showLabel && (
         <div className="flex justify-between items-center mb-1">
-          <span className="text-sm font-medium text-[--color-text-muted]">
+          <span className="text-sm font-medium" style={{ color: '#6B7C93' }}>
             {label}
           </span>
-          <span className="text-sm font-bold text-[--color-secondary]">
+          <span className="text-sm font-bold" style={{ color: '#1E3A5F' }}>
             {Math.round(percentage)}%
           </span>
         </div>
@@ -103,7 +104,7 @@ export function CircularProgress({
       </svg>
       {showValue && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-bold text-[--color-secondary]">
+          <span className="text-lg font-bold" style={{ color: '#1E3A5F' }}>
             {Math.round(percentage)}%
           </span>
         </div>

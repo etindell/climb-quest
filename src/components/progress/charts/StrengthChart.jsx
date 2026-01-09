@@ -16,8 +16,8 @@ function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 rounded-lg shadow-lg border border-gray-100 text-sm">
-        <p className="font-medium text-[--color-secondary]">{label}</p>
-        <p className="text-[--color-primary]">
+        <p className="font-medium" style={{ color: '#1E3A5F' }}>{label}</p>
+        <p style={{ color: '#40E0D0' }}>
           {payload[0].value} {payload[0].payload.unit}
         </p>
       </div>
@@ -49,7 +49,7 @@ export function StrengthChart({ personalRecords }) {
   return (
     <Card>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-[--color-secondary]">Strength Progress</h3>
+        <h3 className="font-semibold" style={{ color: '#1E3A5F' }}>Strength Progress</h3>
         {currentPR !== null && (
           <Badge variant="celebration">
             PR: {currentPR} {metric?.unit}
@@ -66,11 +66,15 @@ export function StrengthChart({ personalRecords }) {
             className={`
               px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap
               transition-colors flex items-center gap-1
-              ${selectedMetric === m.key
-                ? 'bg-[--color-primary] text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ${selectedMetric !== m.key
+                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : ''
               }
             `}
+            style={selectedMetric === m.key
+              ? { backgroundColor: '#40E0D0', color: 'white' }
+              : {}
+            }
           >
             <span>{m.emoji}</span>
             <span>{m.label}</span>
@@ -113,19 +117,19 @@ export function StrengthChart({ personalRecords }) {
       ) : chartData.length === 1 ? (
         <div className="h-48 flex flex-col items-center justify-center text-center">
           <p className="text-4xl mb-2">{metric?.emoji}</p>
-          <p className="text-2xl font-bold text-[--color-secondary]">
+          <p className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
             {chartData[0].value} {metric?.unit}
           </p>
-          <p className="text-sm text-[--color-text-muted]">First record!</p>
-          <p className="text-xs text-[--color-text-muted] mt-1">
+          <p className="text-sm" style={{ color: '#6B7C93' }}>First record!</p>
+          <p className="text-xs mt-1" style={{ color: '#6B7C93' }}>
             Keep logging to see your progress chart
           </p>
         </div>
       ) : (
         <div className="h-48 flex flex-col items-center justify-center text-center">
           <p className="text-4xl mb-2">{metric?.emoji}</p>
-          <p className="text-[--color-text-muted]">No records yet</p>
-          <p className="text-sm text-[--color-text-muted] mt-1">
+          <p style={{ color: '#6B7C93' }}>No records yet</p>
+          <p className="text-sm mt-1" style={{ color: '#6B7C93' }}>
             Log your first {metric?.label.toLowerCase()} to start tracking!
           </p>
         </div>

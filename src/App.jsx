@@ -27,7 +27,16 @@ function AppContent() {
     incrementStat,
     exportData,
     importData,
-    resetData
+    resetData,
+    // Program actions
+    startProgram,
+    logClimbingSession,
+    markClimbingDay,
+    completeSession,
+    updateExerciseProgress,
+    syncProgramWeek,
+    updateWeekTemplate,
+    resetProgram
   } = useAppState();
 
   const navigate = useNavigate();
@@ -64,7 +73,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[--color-background]">
+    <div className="min-h-screen" style={{ backgroundColor: '#F0FAFA' }}>
       <Routes>
         <Route
           path="/"
@@ -79,6 +88,13 @@ function AppContent() {
               onIncrementStat={incrementStat}
               activeWorkout={activeWorkout}
               setActiveWorkout={setActiveWorkout}
+              // Program actions
+              onStartProgram={startProgram}
+              onLogClimbingSession={logClimbingSession}
+              onMarkClimbingDay={markClimbingDay}
+              onCompleteSession={completeSession}
+              onUpdateExerciseProgress={updateExerciseProgress}
+              onSyncProgramWeek={syncProgramWeek}
             />
           }
         />
@@ -119,6 +135,9 @@ function AppContent() {
               exportData={exportData}
               importData={importData}
               resetData={resetData}
+              // Program actions
+              onResetProgram={resetProgram}
+              onUpdateWeekTemplate={updateWeekTemplate}
             />
           }
         />
@@ -176,20 +195,22 @@ function InstallPrompt() {
       <div className="flex items-center gap-3">
         <span className="text-3xl">📱</span>
         <div className="flex-1">
-          <p className="font-bold text-[--color-secondary]">Install Climb Quest</p>
-          <p className="text-sm text-[--color-text-muted]">Add to home screen for the best experience!</p>
+          <p className="font-bold" style={{ color: '#1E3A5F' }}>Install Climb Quest</p>
+          <p className="text-sm" style={{ color: '#6B7C93' }}>Add to home screen for the best experience!</p>
         </div>
       </div>
       <div className="flex gap-2 mt-3">
         <button
           onClick={handleDismiss}
-          className="flex-1 py-2 px-4 text-[--color-text-muted] text-sm"
+          className="flex-1 py-2 px-4 text-sm"
+          style={{ color: '#6B7C93' }}
         >
           Not now
         </button>
         <button
           onClick={handleInstall}
-          className="flex-1 py-2 px-4 bg-[--color-primary] text-white rounded-lg font-semibold text-sm"
+          className="flex-1 py-2 px-4 rounded-lg font-semibold text-sm text-white"
+          style={{ backgroundColor: '#40E0D0' }}
         >
           Install
         </button>

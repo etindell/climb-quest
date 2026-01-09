@@ -35,14 +35,14 @@ export function PullupLadder({ personalRecords }) {
   return (
     <Card>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-[--color-secondary]">Pull-up Progress</h3>
-        <Target className="text-[--color-primary]" size={20} />
+        <h3 className="font-semibold" style={{ color: '#1E3A5F' }}>Pull-up Progress</h3>
+        <Target style={{ color: '#40E0D0' }} size={20} />
       </div>
 
       {/* Goal progress */}
-      <div className="bg-[--color-primary]/10 rounded-xl p-4 mb-4">
+      <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: 'rgba(64, 224, 208, 0.1)' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-[--color-secondary]">
+          <span className="text-sm font-medium" style={{ color: '#1E3A5F' }}>
             Goal: {TARGET_UNASSISTED} Unassisted Pull-ups
           </span>
           {unassistedBest >= TARGET_UNASSISTED && (
@@ -55,7 +55,7 @@ export function PullupLadder({ personalRecords }) {
           color={unassistedBest >= TARGET_UNASSISTED ? 'celebration' : 'primary'}
           size="md"
         />
-        <p className="text-xs text-[--color-text-muted] mt-2">
+        <p className="text-xs mt-2" style={{ color: '#6B7C93' }}>
           {unassistedBest
             ? `Current best: ${unassistedBest} reps (${Math.round(progressToGoal)}% of goal)`
             : 'Start with assisted pull-ups and work your way up!'}
@@ -75,31 +75,32 @@ export function PullupLadder({ personalRecords }) {
               key={level}
               className={`
                 flex items-center gap-3 p-3 rounded-xl transition-all
-                ${isCurrent ? 'bg-[--color-primary]/10 ring-2 ring-[--color-primary]' : ''}
                 ${isUnlocked && !isCurrent ? 'bg-green-50' : ''}
                 ${!isUnlocked ? 'bg-gray-50 opacity-60' : ''}
               `}
+              style={isCurrent ? { backgroundColor: 'rgba(64, 224, 208, 0.1)', boxShadow: 'inset 0 0 0 2px #40E0D0' } : {}}
             >
               {/* Level indicator */}
-              <div className={`
-                w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm
-                ${isUnassisted
-                  ? 'bg-[--color-celebration] text-white'
-                  : isUnlocked
-                    ? 'bg-[--color-primary] text-white'
-                    : 'bg-gray-200 text-gray-500'
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+                style={
+                  isUnassisted
+                    ? { backgroundColor: '#FFD700', color: 'white' }
+                    : isUnlocked
+                      ? { backgroundColor: '#40E0D0', color: 'white' }
+                      : { backgroundColor: '#E5E7EB', color: '#6B7280' }
                 }
-              `}>
+              >
                 {isUnassisted ? '💪' : `${level}`}
               </div>
 
               {/* Level info */}
               <div className="flex-1">
-                <p className={`font-medium ${isUnlocked ? 'text-[--color-secondary]' : 'text-gray-400'}`}>
+                <p className="font-medium" style={{ color: isUnlocked ? '#1E3A5F' : '#9CA3AF' }}>
                   {isUnassisted ? 'Unassisted' : `${level} lb assist`}
                 </p>
                 {isUnlocked && (
-                  <p className="text-sm text-[--color-text-muted]">
+                  <p className="text-sm" style={{ color: '#6B7C93' }}>
                     Best: {best} reps
                   </p>
                 )}
@@ -116,7 +117,7 @@ export function PullupLadder({ personalRecords }) {
                   </div>
                 )}
                 {isCurrent && !isUnlocked && (
-                  <TrendingUp className="text-[--color-primary]" size={20} />
+                  <TrendingUp style={{ color: '#40E0D0' }} size={20} />
                 )}
               </div>
             </div>

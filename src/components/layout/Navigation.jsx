@@ -23,7 +23,7 @@ export function Navigation() {
               w-16 h-full
               transition-colors duration-200
               ${isActive
-                ? 'text-[--color-primary]'
+                ? 'text-teal-400'
                 : 'text-gray-400 hover:text-gray-600'
               }
             `}

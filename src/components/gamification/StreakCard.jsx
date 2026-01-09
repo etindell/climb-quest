@@ -60,8 +60,8 @@ export function StreakCard({ streaks, onUseFreeze }) {
                 <Flame className={getFireIntensity()} size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-[--color-secondary]">Workout Streak</h3>
-                <p className="text-xs text-[--color-text-muted]">
+                <h3 className="font-bold" style={{ color: '#1E3A5F' }}>Workout Streak</h3>
+                <p className="text-xs" style={{ color: '#6B7C93' }}>
                   {lastWorkoutDate
                     ? `Last workout: ${format(parseISO(lastWorkoutDate), 'MMM d')}`
                     : 'Start your streak today!'
@@ -90,18 +90,18 @@ export function StreakCard({ streaks, onUseFreeze }) {
           {/* Main streak display */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-5xl font-bold text-[--color-secondary]">{current}</p>
-              <p className="text-sm text-[--color-text-muted]">
+              <p className="text-5xl font-bold" style={{ color: '#1E3A5F' }}>{current}</p>
+              <p className="text-sm" style={{ color: '#6B7C93' }}>
                 {current === 1 ? 'day' : 'days'} strong
               </p>
             </div>
 
             <div className="text-right">
-              <div className="flex items-center gap-1 text-[--color-celebration]">
+              <div className="flex items-center gap-1" style={{ color: '#FFD700' }}>
                 <Trophy size={16} />
                 <span className="font-bold">{best}</span>
               </div>
-              <p className="text-xs text-[--color-text-muted]">Best streak</p>
+              <p className="text-xs" style={{ color: '#6B7C93' }}>Best streak</p>
             </div>
           </div>
 
@@ -113,7 +113,7 @@ export function StreakCard({ streaks, onUseFreeze }) {
                   key={milestone}
                   className={`flex-1 py-2 rounded-lg text-center text-sm font-medium
                     ${current >= milestone
-                      ? 'bg-[--color-celebration]/20 text-[--color-celebration]'
+                      ? 'bg-amber-100 text-amber-600'
                       : 'bg-gray-100 text-gray-400'
                     }`}
                 >
@@ -169,7 +169,7 @@ export function StreakCard({ streaks, onUseFreeze }) {
           {current === 0 && (
             <div className="mt-4 p-4 bg-gray-50 rounded-xl text-center">
               <p className="text-3xl mb-2">🎯</p>
-              <p className="text-[--color-text-muted]">
+              <p style={{ color: '#6B7C93' }}>
                 Complete a workout to start your streak!
               </p>
             </div>
@@ -188,7 +188,7 @@ export function StreakCard({ streaks, onUseFreeze }) {
             <Snowflake className="text-blue-500" size={40} />
           </div>
 
-          <p className="text-[--color-secondary] mb-4">
+          <p className="mb-4" style={{ color: '#1E3A5F' }}>
             A Streak Freeze protects your streak when you need a rest day.
           </p>
 

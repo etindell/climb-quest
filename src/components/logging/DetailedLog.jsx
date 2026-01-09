@@ -102,10 +102,10 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
     <div className="space-y-4 max-h-[70vh] overflow-y-auto">
       {/* Header */}
       <div className="text-center sticky top-0 bg-white pb-2 z-10">
-        <h2 className="text-xl font-bold text-[--color-secondary]">
+        <h2 className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
           Log Your Workout
         </h2>
-        <p className="text-sm text-[--color-text-muted]">
+        <p className="text-sm" style={{ color: '#6B7C93' }}>
           {completedCount}/{exercises.length} exercises done
         </p>
       </div>
@@ -138,7 +138,7 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
       {/* PR Trackable Exercises (always shown) */}
       {prTrackableExercises.length > 0 && (
         <div className="space-y-2">
-          <h3 className="font-semibold text-[--color-secondary] flex items-center gap-2">
+          <h3 className="font-semibold flex items-center gap-2" style={{ color: '#1E3A5F' }}>
             <Trophy size={16} className="text-amber-500" />
             PR-Trackable Exercises
           </h3>
@@ -159,7 +159,8 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
         <div className="space-y-2">
           <button
             onClick={() => setShowAllExercises(!showAllExercises)}
-            className="w-full flex items-center justify-between p-2 text-[--color-secondary] hover:bg-gray-50 rounded-lg"
+            className="w-full flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg"
+            style={{ color: '#1E3A5F' }}
           >
             <span className="font-semibold">Other Exercises ({otherExercises.length})</span>
             {showAllExercises ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -205,7 +206,7 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
 
       {/* Rating */}
       <Card>
-        <p className="font-semibold text-[--color-secondary] mb-3">
+        <p className="font-semibold mb-3" style={{ color: '#1E3A5F' }}>
           How did it feel overall?
         </p>
         <div className="flex justify-around">
@@ -216,13 +217,14 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
               className={`
                 flex flex-col items-center p-2 rounded-lg transition-all
                 ${rating === emoji
-                  ? 'bg-[--color-primary]/20 scale-110'
+                  ? 'scale-110'
                   : 'hover:bg-gray-50'
                 }
               `}
+              style={rating === emoji ? { backgroundColor: 'rgba(64, 224, 208, 0.2)' } : {}}
             >
               <span className="text-2xl">{emoji}</span>
-              <span className="text-xs text-[--color-text-muted] mt-1">{label}</span>
+              <span className="text-xs mt-1" style={{ color: '#6B7C93' }}>{label}</span>
             </button>
           ))}
         </div>
@@ -234,8 +236,9 @@ export function DetailedLog({ workout, personalRecords = {}, onComplete, onClose
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes (optional) - Any highlights or things to remember?"
         className="w-full p-3 border border-gray-200 rounded-xl resize-none
-                   focus:ring-2 focus:ring-[--color-primary] focus:border-transparent
-                   outline-none text-[--color-secondary]"
+                   focus:ring-2 focus:ring-teal-400 focus:border-transparent
+                   outline-none"
+        style={{ color: '#1E3A5F' }}
         rows={2}
       />
 
@@ -276,7 +279,7 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
               {log.completed && <Check size={14} />}
             </button>
             <span className="text-lg">{exercise.emoji}</span>
-            <span className="font-medium text-[--color-secondary]">{exercise.name}</span>
+            <span className="font-medium" style={{ color: '#1E3A5F' }}>{exercise.name}</span>
           </div>
         </div>
       </div>
@@ -302,7 +305,7 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
             {log.completed && <Check size={16} />}
           </button>
           <span className="text-xl">{exercise.emoji}</span>
-          <span className="font-semibold text-[--color-secondary]">{exercise.name}</span>
+          <span className="font-semibold" style={{ color: '#1E3A5F' }}>{exercise.name}</span>
         </div>
         {isPRCandidate && (
           <Badge variant="celebration" size="sm">
@@ -314,7 +317,7 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
       {log.completed && (
         <div className="flex items-center gap-4 ml-9">
           <div>
-            <label className="text-xs text-[--color-text-muted] block mb-1">Sets</label>
+            <label className="text-xs block mb-1" style={{ color: '#6B7C93' }}>Sets</label>
             <input
               type="number"
               min="1"
@@ -322,11 +325,11 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
               value={log.sets}
               onChange={(e) => onChange({ sets: parseInt(e.target.value) || 1 })}
               className="w-16 p-2 text-center border border-gray-200 rounded-lg
-                         focus:ring-2 focus:ring-[--color-primary] focus:border-transparent"
+                         focus:ring-2 focus:ring-teal-400 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="text-xs text-[--color-text-muted] block mb-1">
+            <label className="text-xs block mb-1" style={{ color: '#6B7C93' }}>
               {isDuration ? 'Seconds' : 'Reps'}
             </label>
             <input
@@ -336,7 +339,7 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
               value={log.value}
               onChange={(e) => onChange({ value: parseInt(e.target.value) || 1 })}
               className="w-20 p-2 text-center border border-gray-200 rounded-lg
-                         focus:ring-2 focus:ring-[--color-primary] focus:border-transparent"
+                         focus:ring-2 focus:ring-teal-400 focus:border-transparent"
             />
           </div>
           {isDuration && (
@@ -347,8 +350,9 @@ function ExerciseLogCard({ exercise, log, onChange, isPRCandidate, compact }) {
                   onClick={() => onChange({ value: sec })}
                   className={`
                     px-2 py-1 rounded text-xs font-medium
-                    ${log.value === sec ? 'bg-[--color-primary] text-white' : 'bg-gray-100'}
+                    ${log.value === sec ? 'text-white' : 'bg-gray-100'}
                   `}
+                  style={log.value === sec ? { backgroundColor: '#40E0D0' } : {}}
                 >
                   {sec}s
                 </button>

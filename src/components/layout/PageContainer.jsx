@@ -9,20 +9,26 @@ export function PageContainer({
   noPadding = false
 }) {
   return (
-    <div className={`min-h-screen pb-20 bg-[--color-background] ${className}`}>
+    <div
+      className={`min-h-screen pb-20 ${className}`}
+      style={{ backgroundColor: '#F0FAFA' }}
+    >
       {/* Header */}
       {(title || action) && (
-        <header className="sticky top-0 z-30 bg-[--color-background]/95 backdrop-blur-sm">
+        <header
+          className="sticky top-0 z-30 backdrop-blur-sm"
+          style={{ backgroundColor: 'rgba(240, 250, 250, 0.95)' }}
+        >
           <div className="px-4 py-4 max-w-lg mx-auto">
             <div className="flex items-center justify-between">
               <div>
                 {title && (
-                  <h1 className="text-2xl font-bold text-[--color-secondary]">
+                  <h1 className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>
                     {title}
                   </h1>
                 )}
                 {subtitle && (
-                  <p className="text-sm text-[--color-text-muted] mt-0.5">
+                  <p className="text-sm mt-0.5" style={{ color: '#6B7C93' }}>
                     {subtitle}
                   </p>
                 )}
@@ -47,7 +53,7 @@ export function PageSection({ title, action, children, className = '' }) {
       {(title || action) && (
         <div className="flex items-center justify-between mb-3">
           {title && (
-            <h2 className="text-lg font-bold text-[--color-secondary]">
+            <h2 className="text-lg font-bold" style={{ color: '#1E3A5F' }}>
               {title}
             </h2>
           )}

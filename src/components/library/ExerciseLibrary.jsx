@@ -79,8 +79,9 @@ export function ExerciseLibrary() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-10 pr-10 py-3 bg-white rounded-xl border-0
-                     focus:ring-2 focus:ring-[--color-primary] outline-none
-                     text-[--color-secondary] placeholder:text-gray-400"
+                     focus:ring-2 focus:ring-teal-400 outline-none
+                     placeholder:text-gray-400"
+          style={{ color: '#1E3A5F' }}
         />
         {searchQuery && (
           <button
@@ -102,7 +103,7 @@ export function ExerciseLibrary() {
           <Filter size={16} className="mr-1" />
           Filters
           {hasFilters && (
-            <span className="ml-1 w-2 h-2 bg-[--color-celebration] rounded-full" />
+            <span className="ml-1 w-2 h-2 rounded-full" style={{ backgroundColor: '#FFD700' }} />
           )}
         </Button>
 
@@ -118,7 +119,7 @@ export function ExerciseLibrary() {
         <div className="bg-white rounded-xl p-4 mb-4 space-y-4">
           {/* Category Filter */}
           <div>
-            <h3 className="text-sm font-semibold text-[--color-secondary] mb-2">
+            <h3 className="text-sm font-semibold mb-2" style={{ color: '#1E3A5F' }}>
               Category
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -132,10 +133,11 @@ export function ExerciseLibrary() {
                     px-3 py-1.5 rounded-full text-sm font-medium
                     transition-colors duration-200
                     ${selectedCategory === key
-                      ? 'bg-[--color-primary] text-white'
+                      ? 'text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }
                   `}
+                  style={selectedCategory === key ? { backgroundColor: '#40E0D0' } : {}}
                 >
                   {cat.emoji} {cat.name}
                 </button>
@@ -145,7 +147,7 @@ export function ExerciseLibrary() {
 
           {/* Location Filter */}
           <div>
-            <h3 className="text-sm font-semibold text-[--color-secondary] mb-2">
+            <h3 className="text-sm font-semibold mb-2" style={{ color: '#1E3A5F' }}>
               Location
             </h3>
             <div className="flex gap-2">
@@ -161,10 +163,11 @@ export function ExerciseLibrary() {
                     px-3 py-1.5 rounded-full text-sm font-medium
                     transition-colors duration-200
                     ${selectedLocation === key
-                      ? 'bg-[--color-primary] text-white'
+                      ? 'text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }
                   `}
+                  style={selectedLocation === key ? { backgroundColor: '#40E0D0' } : {}}
                 >
                   {label}
                 </button>
@@ -175,7 +178,7 @@ export function ExerciseLibrary() {
       )}
 
       {/* Results Count */}
-      <p className="text-sm text-[--color-text-muted] mb-4">
+      <p className="text-sm mb-4" style={{ color: '#6B7C93' }}>
         Showing {filteredExercises.length} exercise{filteredExercises.length !== 1 ? 's' : ''}
       </p>
 
@@ -215,8 +218,8 @@ export function ExerciseLibrary() {
       {filteredExercises.length === 0 && (
         <div className="text-center py-12">
           <p className="text-4xl mb-3">🔍</p>
-          <p className="text-[--color-secondary] font-semibold">No exercises found</p>
-          <p className="text-[--color-text-muted] text-sm mt-1">
+          <p className="font-semibold" style={{ color: '#1E3A5F' }}>No exercises found</p>
+          <p className="text-sm mt-1" style={{ color: '#6B7C93' }}>
             Try adjusting your filters
           </p>
           <Button

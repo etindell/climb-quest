@@ -70,12 +70,12 @@ export function ScheduleModal({ isOpen, onClose, template, scheduledWorkouts, on
       <div className="space-y-4">
         {/* Template Info */}
         {template && (
-          <div className="bg-[--color-primary]/10 rounded-xl p-4">
+          <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(64, 224, 208, 0.1)' }}>
             <div className="flex items-center gap-2">
               <span className="text-2xl">📋</span>
               <div>
-                <p className="font-bold text-[--color-secondary]">{template.name}</p>
-                <p className="text-sm text-[--color-text-muted]">
+                <p className="font-bold" style={{ color: '#1E3A5F' }}>{template.name}</p>
+                <p className="text-sm" style={{ color: '#6B7C93' }}>
                   ~{template.estimatedMinutes} min • {template.exercises?.length || 0} exercises
                 </p>
               </div>
@@ -91,7 +91,7 @@ export function ScheduleModal({ isOpen, onClose, template, scheduledWorkouts, on
           >
             <ChevronLeft size={20} />
           </button>
-          <span className="font-semibold text-[--color-secondary]">
+          <span className="font-semibold" style={{ color: '#1E3A5F' }}>
             {format(currentWeekStart, 'MMM d')} - {format(addDays(currentWeekStart, 6), 'MMM d, yyyy')}
           </span>
           <button
@@ -117,15 +117,19 @@ export function ScheduleModal({ isOpen, onClose, template, scheduledWorkouts, on
                 className={`
                   p-3 rounded-xl text-center transition-all
                   ${isPast ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-100'}
-                  ${isSelected ? 'bg-[--color-primary] text-white' : ''}
-                  ${isToday(day) && !isSelected ? 'ring-2 ring-[--color-primary]' : ''}
+                  ${isSelected ? 'text-white' : ''}
+                  ${isToday(day) && !isSelected ? 'ring-2 ring-teal-400' : ''}
                   ${hasWorkout && !isSelected ? 'bg-orange-100' : ''}
                 `}
+                style={isSelected ? { backgroundColor: '#40E0D0' } : undefined}
               >
                 <p className="text-xs font-medium mb-1">
                   {format(day, 'EEE')}
                 </p>
-                <p className={`text-lg font-bold ${isSelected ? '' : 'text-[--color-secondary]'}`}>
+                <p
+                  className={`text-lg font-bold ${isSelected ? '' : ''}`}
+                  style={!isSelected ? { color: '#1E3A5F' } : undefined}
+                >
                   {format(day, 'd')}
                 </p>
                 {hasWorkout && !isSelected && (
@@ -147,8 +151,8 @@ export function ScheduleModal({ isOpen, onClose, template, scheduledWorkouts, on
         {/* Selected Date */}
         {selectedDate && (
           <div className="text-center">
-            <p className="text-sm text-[--color-text-muted]">Selected:</p>
-            <p className="font-bold text-[--color-secondary]">
+            <p className="text-sm" style={{ color: '#6B7C93' }}>Selected:</p>
+            <p className="font-bold" style={{ color: '#1E3A5F' }}>
               {format(selectedDate, 'EEEE, MMMM d, yyyy')}
             </p>
           </div>

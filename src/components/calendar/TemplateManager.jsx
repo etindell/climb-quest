@@ -4,7 +4,7 @@ import { Card, Button, Badge, Modal } from '../common';
 import { getExerciseById } from '../../data/exercises';
 
 const WORKOUT_TYPE_COLORS = {
-  technique: 'bg-[--color-primary]',
+  technique: { backgroundColor: '#40E0D0' },
   strength: 'bg-orange-400',
   endurance: 'bg-green-500',
   mixed: 'bg-purple-500'
@@ -35,10 +35,13 @@ function TemplateCard({ template, onEdit, onDelete, onDuplicate, onSchedule, onS
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <div className={`w-2 h-2 rounded-full ${WORKOUT_TYPE_COLORS[template.type]}`} />
-              <h3 className="font-bold text-[--color-secondary]">{template.name}</h3>
+              <div
+                className={`w-2 h-2 rounded-full ${typeof WORKOUT_TYPE_COLORS[template.type] === 'string' ? WORKOUT_TYPE_COLORS[template.type] : ''}`}
+                style={typeof WORKOUT_TYPE_COLORS[template.type] === 'object' ? WORKOUT_TYPE_COLORS[template.type] : undefined}
+              />
+              <h3 className="font-bold" style={{ color: '#1E3A5F' }}>{template.name}</h3>
             </div>
-            <div className="flex items-center gap-2 text-sm text-[--color-text-muted]">
+            <div className="flex items-center gap-2 text-sm" style={{ color: '#6B7C93' }}>
               <span>{typeInfo.emoji} {typeInfo.label}</span>
               <span>•</span>
               <span>~{template.estimatedMinutes} min</span>
@@ -55,7 +58,7 @@ function TemplateCard({ template, onEdit, onDelete, onDuplicate, onSchedule, onS
             }}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <MoreVertical size={18} className="text-[--color-text-muted]" />
+            <MoreVertical size={18} style={{ color: '#6B7C93' }} />
           </button>
         </div>
 
@@ -67,7 +70,7 @@ function TemplateCard({ template, onEdit, onDelete, onDuplicate, onSchedule, onS
             </span>
           ))}
           {exercises.length > 4 && (
-            <span className="text-sm text-[--color-text-muted]">
+            <span className="text-sm" style={{ color: '#6B7C93' }}>
               +{exercises.length - 4}
             </span>
           )}
@@ -128,7 +131,7 @@ function TemplateCard({ template, onEdit, onDelete, onDuplicate, onSchedule, onS
           </div>
 
           <div className="bg-gray-50 rounded-xl p-4">
-            <h4 className="font-semibold text-[--color-secondary] mb-3">
+            <h4 className="font-semibold mb-3" style={{ color: '#1E3A5F' }}>
               Exercises ({exercises.length})
             </h4>
             <div className="space-y-2">
@@ -136,8 +139,8 @@ function TemplateCard({ template, onEdit, onDelete, onDuplicate, onSchedule, onS
                 <div key={i} className="flex items-center gap-3 p-2 bg-white rounded-lg">
                   <span className="text-xl">{ex.emoji}</span>
                   <div className="flex-1">
-                    <p className="font-medium text-[--color-secondary]">{ex.name}</p>
-                    <p className="text-xs text-[--color-text-muted]">
+                    <p className="font-medium" style={{ color: '#1E3A5F' }}>{ex.name}</p>
+                    <p className="text-xs" style={{ color: '#6B7C93' }}>
                       {template.exercises[i]?.sets || ex.defaultSets} sets
                     </p>
                   </div>
@@ -174,8 +177,8 @@ export function TemplateManager({ templates, onEdit, onDelete, onDuplicate, onSc
     return (
       <Card className="text-center py-8">
         <p className="text-4xl mb-3">📋</p>
-        <p className="font-semibold text-[--color-secondary]">No templates yet</p>
-        <p className="text-sm text-[--color-text-muted] mt-1">
+        <p className="font-semibold" style={{ color: '#1E3A5F' }}>No templates yet</p>
+        <p className="text-sm mt-1" style={{ color: '#6B7C93' }}>
           Save a workout to create your first template!
         </p>
       </Card>

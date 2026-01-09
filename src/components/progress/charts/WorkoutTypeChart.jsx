@@ -33,9 +33,9 @@ export function WorkoutTypeChart({ workouts }) {
   if (data.length === 0) {
     return (
       <Card>
-        <h3 className="font-semibold text-[--color-secondary] mb-4">Workout Distribution</h3>
+        <h3 className="font-semibold mb-4" style={{ color: '#1E3A5F' }}>Workout Distribution</h3>
         <div className="h-40 flex items-center justify-center">
-          <p className="text-[--color-text-muted]">Complete workouts to see your distribution!</p>
+          <p style={{ color: '#6B7C93' }}>Complete workouts to see your distribution!</p>
         </div>
       </Card>
     );
@@ -45,7 +45,7 @@ export function WorkoutTypeChart({ workouts }) {
 
   return (
     <Card>
-      <h3 className="font-semibold text-[--color-secondary] mb-4">Workout Distribution</h3>
+      <h3 className="font-semibold mb-4" style={{ color: '#1E3A5F' }}>Workout Distribution</h3>
 
       <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">
@@ -75,7 +75,7 @@ export function WorkoutTypeChart({ workouts }) {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: entry.color }}
             />
-            <span className="text-xs text-[--color-text-muted]">
+            <span className="text-xs" style={{ color: '#6B7C93' }}>
               {entry.name} ({Math.round((entry.value / total) * 100)}%)
             </span>
           </div>

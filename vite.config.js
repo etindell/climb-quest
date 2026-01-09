@@ -5,5 +5,6 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/climb-quest/',
+  // Use /climb-quest/ for GitHub Pages, / for Railway
+  base: process.env.RAILWAY_ENVIRONMENT ? '/' : '/climb-quest/',
 })

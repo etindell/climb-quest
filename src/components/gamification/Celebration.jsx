@@ -72,14 +72,14 @@ export function CelebrationModal({ show, onClose, title, message, emoji = '🎉'
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <div className="bg-white rounded-2xl p-8 mx-4 max-w-sm text-center animate-bounce-in">
           <div className="text-6xl mb-4">{emoji}</div>
-          <h2 className="text-2xl font-bold text-[--color-secondary] mb-2">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1E3A5F' }}>
             {title}
           </h2>
-          <p className="text-[--color-text-muted] mb-6">{message}</p>
+          <p className="mb-6" style={{ color: '#6B7C93' }}>{message}</p>
           <button
             onClick={onClose}
-            className="bg-[--color-primary] text-white px-8 py-3 rounded-xl font-semibold
-                       hover:bg-[--color-primary-dark] transition-colors"
+            className="text-white px-8 py-3 rounded-xl font-semibold transition-colors"
+            style={{ backgroundColor: '#40E0D0' }}
           >
             Awesome!
           </button>
@@ -100,15 +100,15 @@ export function AchievementToast({ achievement, onClose }) {
   return (
     <div className="fixed top-4 left-4 right-4 z-50 flex justify-center pointer-events-none">
       <div className="bg-white rounded-xl shadow-xl p-4 flex items-center gap-3 animate-slide-down pointer-events-auto max-w-sm">
-        <div className="w-12 h-12 bg-[--color-celebration]/20 rounded-full flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)' }}>
           <span className="text-2xl">{achievement.emoji}</span>
         </div>
         <div className="flex-1">
-          <p className="text-xs text-[--color-celebration] font-semibold uppercase">
+          <p className="text-xs font-semibold uppercase" style={{ color: '#FFD700' }}>
             Achievement Unlocked!
           </p>
-          <p className="font-bold text-[--color-secondary]">{achievement.name}</p>
-          <p className="text-xs text-[--color-text-muted]">{achievement.description}</p>
+          <p className="font-bold" style={{ color: '#1E3A5F' }}>{achievement.name}</p>
+          <p className="text-xs" style={{ color: '#6B7C93' }}>{achievement.description}</p>
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@ export function XPGain({ amount, onComplete }) {
 
   return (
     <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-      <div className="bg-[--color-celebration] text-white px-4 py-2 rounded-full font-bold text-lg animate-float-up">
+      <div className="text-white px-4 py-2 rounded-full font-bold text-lg animate-float-up" style={{ backgroundColor: '#FFD700' }}>
         +{amount} XP
       </div>
     </div>
@@ -137,13 +137,16 @@ export function LevelUpModal({ show, onClose, level }) {
     <>
       <Confetti show={show} />
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div className="bg-gradient-to-br from-[--color-primary] to-[--color-secondary] rounded-2xl p-8 mx-4 max-w-sm text-center animate-bounce-in">
+        <div
+          className="rounded-2xl p-8 mx-4 max-w-sm text-center animate-bounce-in"
+          style={{ background: 'linear-gradient(to bottom right, #40E0D0, #1E3A5F)' }}
+        >
           <div className="text-7xl mb-4 animate-pulse">{level.emoji}</div>
           <p className="text-white/80 text-sm uppercase tracking-wider mb-1">Level Up!</p>
           <h2 className="text-3xl font-bold text-white mb-2">
             Level {level.level}
           </h2>
-          <p className="text-2xl font-bold text-[--color-celebration] mb-4">
+          <p className="text-2xl font-bold mb-4" style={{ color: '#FFD700' }}>
             {level.name}
           </p>
           <p className="text-white/80 mb-6">
@@ -151,8 +154,8 @@ export function LevelUpModal({ show, onClose, level }) {
           </p>
           <button
             onClick={onClose}
-            className="bg-white text-[--color-secondary] px-8 py-3 rounded-xl font-bold
-                       hover:bg-gray-100 transition-colors shadow-lg"
+            className="bg-white px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors shadow-lg"
+            style={{ color: '#1E3A5F' }}
           >
             Let's Go!
           </button>
@@ -181,22 +184,22 @@ export function PRCelebration({ show, onClose, prType, value }) {
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <div className="bg-white rounded-2xl p-8 mx-4 max-w-sm text-center animate-bounce-in">
           <div className="text-6xl mb-4">{pr.emoji}</div>
-          <p className="text-[--color-celebration] text-sm uppercase tracking-wider font-bold mb-1">
+          <p className="text-sm uppercase tracking-wider font-bold mb-1" style={{ color: '#FFD700' }}>
             New Personal Record!
           </p>
-          <h2 className="text-2xl font-bold text-[--color-secondary] mb-2">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1E3A5F' }}>
             {pr.name}
           </h2>
-          <p className="text-4xl font-bold text-[--color-primary] mb-4">
+          <p className="text-4xl font-bold mb-4" style={{ color: '#40E0D0' }}>
             {value} {pr.unit}
           </p>
-          <p className="text-[--color-text-muted] mb-6">
+          <p className="mb-6" style={{ color: '#6B7C93' }}>
             You crushed your previous best!
           </p>
           <button
             onClick={onClose}
-            className="bg-[--color-primary] text-white px-8 py-3 rounded-xl font-semibold
-                       hover:bg-[--color-primary-dark] transition-colors"
+            className="text-white px-8 py-3 rounded-xl font-semibold transition-colors"
+            style={{ backgroundColor: '#40E0D0' }}
           >
             Amazing!
           </button>

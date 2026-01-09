@@ -79,7 +79,7 @@ export function WelcomeFlow({ onComplete }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-[--color-primary] to-[--color-secondary] flex flex-col">
+    <div className="fixed inset-0 flex flex-col" style={{ background: 'linear-gradient(to bottom right, #40E0D0, #1E3A5F)' }}>
       {/* Progress dots */}
       <div className="flex justify-center gap-2 pt-8 pb-4">
         {STEPS.map((_, index) => (
@@ -145,8 +145,8 @@ export function WelcomeFlow({ onComplete }) {
                     <feature.icon size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-[--color-secondary]">{feature.title}</p>
-                    <p className="text-sm text-[--color-text-muted]">{feature.description}</p>
+                    <p className="font-bold" style={{ color: '#1E3A5F' }}>{feature.title}</p>
+                    <p className="text-sm" style={{ color: '#6B7C93' }}>{feature.description}</p>
                   </div>
                 </Card>
               ))}
@@ -156,10 +156,10 @@ export function WelcomeFlow({ onComplete }) {
           {step.id === 'ready' && (
             <div className="text-center space-y-4">
               <Card className="inline-block px-8 py-4">
-                <p className="text-xl font-bold text-[--color-secondary]">
+                <p className="text-xl font-bold" style={{ color: '#1E3A5F' }}>
                   Welcome, {name || 'Climber'}! 🎉
                 </p>
-                <p className="text-[--color-text-muted] mt-1">
+                <p className="mt-1" style={{ color: '#6B7C93' }}>
                   Time to start your first workout
                 </p>
               </Card>
@@ -199,7 +199,8 @@ export function WelcomeFlow({ onComplete }) {
         <Button
           onClick={handleNext}
           disabled={!canProceed}
-          className="flex-1 bg-white text-[--color-secondary] hover:bg-white/90 disabled:opacity-50"
+          className="flex-1 bg-white hover:bg-gray-100 disabled:opacity-50"
+          style={{ color: '#1E3A5F' }}
           size="lg"
         >
           {isLastStep ? (
