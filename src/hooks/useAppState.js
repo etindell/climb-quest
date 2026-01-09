@@ -73,6 +73,13 @@ export function useAppState() {
     if (migratedState) {
       setState(validateState(migratedState));
     }
+  } else if (state && state._version) {
+    // Always validate/sync state even if no migration needed
+    const validatedState = validateState(state);
+    // Only update if something changed (e.g., sessions synced to workouts)
+    if (validatedState.workouts?.length !== state.workouts?.length) {
+      setState(validatedState);
+    }
   }
 
   // Profile actions

@@ -147,6 +147,53 @@ export function getInitialStateV2() {
 }
 
 /**
+ * Sync sessionHistory to workouts array
+ * Ensures all program sessions appear in the workouts array for calendar/stats
+ * @param {Object} state - State to sync
+ * @returns {Object} - State with synced workouts
+ */
+export function syncSessionHistoryToWorkouts(state) {
+  if (!state?.program?.sessionHistory || !Array.isArray(state.workouts)) {
+    return state;
+  }
+
+  const workouts = [...state.workouts];
+  const existingDates = new Set(
+    workouts
+      .filter(w => w.programSession)
+      .map(w => `${w.date?.split('T')[0]}-${w.type}`)
+  );
+
+  let addedCount = 0;
+
+  for (const session of state.program.sessionHistory) {
+    const key = `${session.date}-${session.sessionType}`;
+    if (!existingDates.has(key)) {
+      // Add missing session to workouts
+      workouts.push({
+        id: session.id,
+        date: new Date(session.date).toISOString(),
+        type: session.sessionType,
+        programSession: true,
+        notes: session.notes || '',
+        xpEarned: session.xpEarned || 0
+      });
+      existingDates.add(key);
+      addedCount++;
+    }
+  }
+
+  if (addedCount > 0) {
+    console.log(`[Migration] Synced ${addedCount} session(s) from sessionHistory to workouts`);
+  }
+
+  return {
+    ...state,
+    workouts
+  };
+}
+
+/**
  * Validate state structure and fix any issues
  * @param {Object} state - State to validate
  * @returns {Object} - Validated/fixed state
@@ -154,7 +201,12 @@ export function getInitialStateV2() {
 export function validateState(state) {
   if (!state) return null;
 
-  const validated = { ...state };
+  let validated = { ...state };
+
+  // Ensure workouts is an array
+  if (!Array.isArray(validated.workouts)) {
+    validated.workouts = [];
+  }
 
   // Ensure program state exists
   if (!validated.program) {
@@ -187,6 +239,9 @@ export function validateState(state) {
     validated._version = CURRENT_DATA_VERSION;
   }
 
+  // Sync any missing sessionHistory entries to workouts
+  validated = syncSessionHistoryToWorkouts(validated);
+
   return validated;
 }
 
@@ -197,5 +252,6 @@ export default {
   initializeProgram,
   getInitialStateV2,
   validateState,
+  syncSessionHistoryToWorkouts,
   CURRENT_DATA_VERSION
 };
