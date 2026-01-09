@@ -466,6 +466,14 @@ export function useAppState() {
 
     addXP(30, 'climbing_session');
     updateStreak();
+
+    // Also add to regular workouts for calendar/stats display
+    addWorkout({
+      type: 'climb',
+      programSession: true,
+      notes,
+      date: new Date(dateStr).toISOString()
+    });
   };
 
   // Mark that user climbed today (deprecated - use logClimbingSession)

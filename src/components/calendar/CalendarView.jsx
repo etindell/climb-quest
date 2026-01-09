@@ -311,9 +311,30 @@ export function CalendarView({
   const selectedDateWorkouts = selectedDate
     ? workouts.filter(w => w.date?.startsWith(selectedDateStr))
     : [];
+  // Also get program session history for this date
+  const selectedDateSessions = selectedDate && program?.sessionHistory
+    ? program.sessionHistory.filter(s => s.date === selectedDateStr)
+    : [];
   const selectedDateScheduled = selectedDate
     ? scheduledWorkouts?.filter(sw => sw.date === selectedDateStr && !sw.completed) || []
     : [];
+
+  // Helper to get friendly name for session type
+  const getSessionTypeName = (type) => {
+    const names = {
+      climb: 'Climbing Session',
+      strength1: 'Strength Session 1',
+      strength2: 'Strength Session 2',
+      miniA: 'Mini Strength A',
+      miniB: 'Mini Strength B',
+      mobility: 'Mobility Session',
+      technique: 'Technique',
+      strength: 'Strength',
+      endurance: 'Endurance',
+      mixed: 'Mixed'
+    };
+    return names[type] || (type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Workout');
+  };
 
   return (
     <PageContainer
@@ -499,11 +520,45 @@ export function CalendarView({
             </button>
           </div>
 
-          {/* Completed workouts */}
-          {selectedDateWorkouts.length > 0 && (
+          {/* Completed workouts (from program sessions) */}
+          {selectedDateSessions.length > 0 && (
             <div className="space-y-2 mb-3">
-              <p className="text-xs font-medium uppercase" style={{ color: '#6B7C93' }}>Completed</p>
-              {selectedDateWorkouts.map(workout => (
+              <p className="text-xs font-medium uppercase" style={{ color: '#6B7C93' }}>Completed Sessions</p>
+              {selectedDateSessions.map(session => (
+                <div
+                  key={session.id}
+                  className="flex items-center gap-3 p-3 bg-green-50 rounded-lg"
+                >
+                  <span className="text-xl">
+                    {session.sessionType === 'climb' ? '🧗' :
+                     session.sessionType === 'strength1' || session.sessionType === 'strength2' ? '💪' :
+                     session.sessionType === 'miniA' || session.sessionType === 'miniB' ? '⚡' :
+                     session.sessionType === 'mobility' ? '🧘' : '✅'}
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-medium" style={{ color: '#1E3A5F' }}>
+                      {getSessionTypeName(session.sessionType)}
+                    </p>
+                    {session.notes && (
+                      <p className="text-xs italic" style={{ color: '#6B7C93' }}>
+                        "{session.notes}"
+                      </p>
+                    )}
+                    <p className="text-xs" style={{ color: '#6B7C93' }}>
+                      +{session.xpEarned || 0} XP
+                    </p>
+                  </div>
+                  <Badge variant="success" size="sm">Done</Badge>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Other completed workouts (non-program) */}
+          {selectedDateWorkouts.filter(w => !w.programSession).length > 0 && (
+            <div className="space-y-2 mb-3">
+              <p className="text-xs font-medium uppercase" style={{ color: '#6B7C93' }}>Other Workouts</p>
+              {selectedDateWorkouts.filter(w => !w.programSession).map(workout => (
                 <div
                   key={workout.id}
                   className="flex items-center gap-3 p-3 bg-green-50 rounded-lg"
@@ -514,7 +569,7 @@ export function CalendarView({
                   />
                   <div className="flex-1">
                     <p className="font-medium" style={{ color: '#1E3A5F' }}>
-                      {workout.type ? workout.type.charAt(0).toUpperCase() + workout.type.slice(1) : 'Workout'}
+                      {getSessionTypeName(workout.type)}
                     </p>
                     <p className="text-xs" style={{ color: '#6B7C93' }}>
                       {workout.exercises?.length || 0} exercises
@@ -561,7 +616,7 @@ export function CalendarView({
           )}
 
           {/* Empty state */}
-          {selectedDateWorkouts.length === 0 && selectedDateScheduled.length === 0 && (
+          {selectedDateSessions.length === 0 && selectedDateWorkouts.length === 0 && selectedDateScheduled.length === 0 && (
             <div className="text-center py-4">
               <p style={{ color: '#6B7C93' }}>No workouts on this day</p>
               {!isBefore(selectedDate, new Date()) && templates.length > 0 && (

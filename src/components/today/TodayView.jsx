@@ -31,6 +31,7 @@ export function TodayView({
 }) {
   const [activeSession, setActiveSession] = useState(null);
   const [showSessionView, setShowSessionView] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   const { showXPGain, showAchievementUnlock, showLevelUp, showStreakMilestone } = useGamification();
 
@@ -352,7 +353,68 @@ export function TodayView({
       {/* Week Overview */}
       {weekProgress && (
         <PageSection title="This Week">
-          <WeekOverview weekProgress={weekProgress} compact />
+          <WeekOverview
+            weekProgress={weekProgress}
+            compact
+            onDayClick={(day) => setSelectedDay(selectedDay?.dateStr === day.dateStr ? null : day)}
+          />
+
+          {/* Selected Day Details */}
+          {selectedDay && (
+            <Card className="mt-3">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-bold" style={{ color: '#1E3A5F' }}>
+                  {format(selectedDay.date, 'EEEE, MMM d')}
+                </h4>
+                <button
+                  onClick={() => setSelectedDay(null)}
+                  className="text-xs hover:opacity-80"
+                  style={{ color: '#6B7C93' }}
+                >
+                  Close
+                </button>
+              </div>
+
+              {/* Show sessions for this day */}
+              {selectedDay.sessions?.length > 0 ? (
+                <div className="space-y-2">
+                  {selectedDay.sessions.map((s, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex items-center gap-3 p-2 rounded-lg ${
+                        s.completed ? 'bg-green-50' : 'bg-gray-50'
+                      }`}
+                    >
+                      <span className="text-lg">
+                        {s.completed ? '✅' :
+                         s.sessionId === 'climb' ? '🧗' :
+                         s.sessionId === 'strength1' || s.sessionId === 'strength2' ? '💪' :
+                         s.sessionId === 'miniA' || s.sessionId === 'miniB' ? '⚡' :
+                         s.sessionId === 'mobility' ? '🧘' : '📅'}
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium" style={{ color: '#1E3A5F' }}>
+                          {s.sessionId === 'climb' ? 'Climbing' :
+                           s.sessionId === 'strength1' ? 'Strength 1' :
+                           s.sessionId === 'strength2' ? 'Strength 2' :
+                           s.sessionId === 'miniA' ? 'Mini A' :
+                           s.sessionId === 'miniB' ? 'Mini B' :
+                           s.sessionId === 'mobility' ? 'Mobility' : s.sessionId}
+                        </p>
+                        <p className="text-xs" style={{ color: '#6B7C93' }}>
+                          {s.completed ? 'Completed' : selectedDay.isPast ? 'Missed' : 'Upcoming'}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : selectedDay.isRestDay ? (
+                <p className="text-sm" style={{ color: '#6B7C93' }}>Rest day - no workouts scheduled</p>
+              ) : (
+                <p className="text-sm" style={{ color: '#6B7C93' }}>No sessions</p>
+              )}
+            </Card>
+          )}
         </PageSection>
       )}
 
