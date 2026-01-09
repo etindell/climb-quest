@@ -1,10 +1,11 @@
 import { useLocalStorage } from './useLocalStorage';
+import { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
 import { defaultGoals } from '../data/defaultGoals';
 import { getLevelForXP, XP_REWARDS } from '../data/levels';
 import { DEFAULT_WEEK_TEMPLATE } from '../data/program';
-import { migrateData, needsMigration, validateState, CURRENT_DATA_VERSION } from '../utils/migration';
+import { migrateData, needsMigration, validateState, syncSessionHistoryToWorkouts, CURRENT_DATA_VERSION } from '../utils/migration';
 import { calculateSessionXP, getCurrentWeekAndCycle } from '../utils/programHelpers';
 
 const initialState = {
@@ -66,21 +67,55 @@ const initialState = {
 
 export function useAppState() {
   const [state, setState] = useLocalStorage('climbquest-data', initialState);
+  const hasSynced = useRef(false);
 
-  // Run migration if needed (on first load)
-  if (needsMigration(state)) {
-    const migratedState = migrateData(state);
-    if (migratedState) {
-      setState(validateState(migratedState));
+  // Run migration and sync on mount - read directly from localStorage to avoid timing issues
+  useEffect(() => {
+    if (hasSynced.current) return;
+    hasSynced.current = true;
+
+    try {
+      // Read directly from localStorage to get the actual data
+      const rawData = localStorage.getItem('climbquest-data');
+      if (!rawData) {
+        console.log('[useAppState] No data in localStorage');
+        return;
+      }
+
+      let currentState = JSON.parse(rawData);
+      console.log('[useAppState] Loaded state, sessionHistory count:', currentState?.program?.sessionHistory?.length || 0);
+      console.log('[useAppState] Current workouts count:', currentState?.workouts?.length || 0);
+
+      let needsUpdate = false;
+
+      // Run migration if needed
+      if (needsMigration(currentState)) {
+        console.log('[useAppState] Running migration...');
+        currentState = migrateData(currentState);
+        needsUpdate = true;
+      }
+
+      // Always sync sessionHistory to workouts
+      const beforeWorkoutsCount = currentState.workouts?.length || 0;
+      currentState = syncSessionHistoryToWorkouts(currentState);
+      const afterWorkoutsCount = currentState.workouts?.length || 0;
+
+      if (afterWorkoutsCount > beforeWorkoutsCount) {
+        console.log(`[useAppState] Synced ${afterWorkoutsCount - beforeWorkoutsCount} session(s) to workouts`);
+        needsUpdate = true;
+      }
+
+      // Validate
+      currentState = validateState(currentState);
+
+      if (needsUpdate) {
+        console.log('[useAppState] Saving updated state');
+        setState(currentState);
+      }
+    } catch (err) {
+      console.error('[useAppState] Error during sync:', err);
     }
-  } else if (state && state._version) {
-    // Always validate/sync state even if no migration needed
-    const validatedState = validateState(state);
-    // Only update if something changed (e.g., sessions synced to workouts)
-    if (validatedState.workouts?.length !== state.workouts?.length) {
-      setState(validatedState);
-    }
-  }
+  }, []);
 
   // Profile actions
   const updateProfile = (updates) => {
